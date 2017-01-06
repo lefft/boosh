@@ -20,3 +20,9 @@ boosh::azChar(345)
 boosh::choozeRound(3.45, d=0)
 
 install_github("lefft/boosh")
+
+# press "i"
+# write your merge message
+# press "esc"
+# write ":wq"
+# then press enter
