@@ -23,9 +23,9 @@ install_github("lefft/boosh")
 
 # to push changes to master branch
 # 
-# first: git add
+# first: git add <filename-with-path>
 # 
-# then: git commit <filename-with-path>
+# then: git commit 
 # 
 # then:
 # for commit message, when in editor:
