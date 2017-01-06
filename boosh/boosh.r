@@ -35,8 +35,10 @@ install_github("lefft/boosh")
 # write ":wq"
 # then press enter
 #
-# then:
-# use this after commit, to sync to github
+# then use this after commit, to sync to github:
+# git push 
+# 
+# note, may have to use after complete thingie:
 # git push origin master
 
 # blaow another edit
