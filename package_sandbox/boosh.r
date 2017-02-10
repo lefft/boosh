@@ -1,4 +1,5 @@
-# boosh.r -- back of envelope area for interfacing w the boosh package
+# boosh.r -- back of envelope area for practicing package dev + 
+#            interfacing w the boosh:: package
 
 # g
 library("devtools")
@@ -21,6 +22,9 @@ boosh::choozeRound(3.45, d=0)
 
 install_github("lefft/boosh")
 
+
+### refresher for basic git commands --
+#
 # to push changes to master branch
 # 
 # first: git add <filename-with-path>
