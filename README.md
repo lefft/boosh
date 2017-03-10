@@ -13,7 +13,7 @@ answer the question 'how does(/can) a calculator work' in the sense i have in mi
 
 > `ml_fiddle` 
 
-practice w basic numpy/pandas data structures via messing around w some scikit-learn models
+practice w basic numpy/pandas data structures via messing around w some scikit-learn models (also inspect `parser.py`)
 
 > `monad` 
 
