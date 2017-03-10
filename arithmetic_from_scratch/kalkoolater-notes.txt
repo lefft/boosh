@@ -1,0 +1,83 @@
+
+# 0 = {} = Ø,
+# 1 = {0} = {Ø},
+# 2 = {0,1} = {Ø, {Ø} },
+# 3 = {0,1,2} = {Ø, {Ø}, {Ø, {Ø} } }
+# 4 = {0,1,2,3} = {Ø, {Ø}, {Ø, {Ø}}, {Ø, {Ø}, {Ø, {Ø}}}}
+
+### AXIOMS OF ZERMELO-FRAENKEL WITH CHOICE SET THEORY #########################
+# === === === === === === === === === === === === === === === === === === 
+
+# 0. LETS ADD AN EMPTY SET AXIOM: exists x all y y notin x
+
+# 1. Axiom of Extensionality: If X and Y have the same elements, then X=Y.
+# forall u(u in X=u in Y)=>X=Y. 	
+
+# 2. Axiom of the Unordered Pair: For any a and b there exists a set {a,b} that contains exactly a and b. (also called Axiom of Pairing)
+# forall a  forall b  exists c  forall x(x in c=(x=a v x=b)). 	
+
+# 3. Axiom of Subsets: If phi is a property (with parameter p), then for any  X and p there exists a set Y={u in X:phi(u,p)} that contains all those u in X that have the property phi. (also called Axiom of Separation or Axiom of Comprehension)
+# forall X  forall p  exists Y  forall u(u in Y=(u in X ^ phi(u,p))). 	
+
+# 4. Axiom of the Sum Set: For any X there exists a set Y= union X, the union of all elements of X. (also called Axiom of Union)
+# forall X  exists Y  forall u(u in Y= exists z(z in X ^ u in z)). 	
+
+# 5. Axiom of the Power Set: For any X there exists a set Y=P(X), the set of all subsets of X.
+# forall X  exists Y  forall u(u in Y=u subset= X). 	
+
+# 6. Axiom of Infinity: There exists an infinite set.
+# exists S[emptyset in S ^ ( forall x in S)[x union {x} in S]]. 	
+
+# 7. Axiom of Replacement: If F is a function, then for any X there exists a set Y=F[X]={F(x):x in X}.
+# forall x  forall y  forall z[phi(x,y,p) ^ phi(x,z,p)=>y=z] 
+# => forall X  exists Y  forall y[y in Y=( exists x in X)phi(x,y,p)]. 	
+
+# 8. Axiom of Foundation: Every nonempty set has an  in -minimal element. (also called Axiom of Regularity)
+# forall S[S!=emptyset=>( exists x in S)S intersection x=emptyset]. 	
+
+# 9. Axiom of Choice: Every family of nonempty sets has a choice function.
+# forall x in a exists A(x,y)=> exists y forall x in aA(x,y(x)). 
+
+
+### AXIOMS OF PEANO ARITHMETIC ################################################
+# === === === === === === === === === === === === === === === === === === 
+
+# 1. Zero is a number.
+
+# 2. If a is a number, the successor of a is a number.
+
+# 3. zero is not the successor of a number.
+
+# 4. Two numbers of which the successors are equal are themselves equal.
+
+# 5. (induction axiom.) If a set S of numbers contains zero and also the successor of every number in S, then every number is in S.
+
+### SET THEORETIC DEF'N OF NATURAL NUMBERS ####################################
+# === === === === === === === === === === === === === === === === === === 
+zero <- "empty"
+one <- list(
+  zero
+)#
+two <- list(
+  zero,
+  list(zero)
+)#
+three <- list(
+  zero,
+  list(zero),
+  list(zero,list(zero))
+)#
+four <- list(
+  zero,
+  list(zero),
+  list(zero,list(zero)),
+  list(zero,list(zero),list(zero,list(zero)))
+)#
+five <- list(
+  zero,
+  list(zero),
+  list(zero,list(zero)),
+  list(zero,list(zero),list(zero,list(zero))),
+  list(zero,list(zero),list(zero,list(zero)),list(zero,list(zero),list(zero,list(zero))))
+)
+# ...
