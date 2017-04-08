@@ -12,18 +12,16 @@ library("magrittr")
   image_read() %>% 
   image_crop("1200x1600+750") %>% 
   image_join() %>% 
-  image_animate(fps=2) %>% 
-  image_write(path="out/bronnie.gif", format="gif", quality=50, flatten=FALSE)
+  image_animate(fps=10) %>% 
+  image_write(path="out/bronnie-10fps.gif", format="gif", quality=50, flatten=FALSE)
 
 # shd be 1300x1600 result a.r.
 # image_crop("100x150+50") # crop out width:100px and height:150px starting +50px from the left
 
-bron <- image_read("swh_swatch_1.jpg")
-
-for (i in seq_along(pix)){
-  bron <- image_composite(bron, image_read(pix[i]))
-}
-
+# btw s/o for the pix to:
+#   Animation Domination High-Def 
+#   LEBRON SONG: STARTED IN CLEVELAND
+#   https://www.youtube.com/watch?v=fAufyxBD-tI
 
 ### python example
 
