@@ -18,11 +18,11 @@ dir("in/")[endsWith(dir("in/"), ".png")] %>%
   image_fill(color="transparent", point="+10+1590", fuzz=10000) %>%  # cut bot
   # image_crop("1200x1600+750") %>% # get middle-ish of pic
   image_crop("2000x1600+0") %>%     # just cut the logo part off
-  image_scale("x900") %>% 
+  image_scale("x700") %>% 
   image_join() %>% 
   image_animate(fps=4) %>% 
-  image_annotate(siggie, location="+30+555", color="gray", font="courier-new", size=16) %>% 
-  image_write(path="out/bron-signed5.gif", quality=100, flatten=FALSE)
+  image_annotate(siggie, location="+30+660", color="gray", font="courier", size=16) %>%
+  image_write(path="out/bron-signed6.gif", quality=100, flatten=FALSE)
 
 # shd be 1300x1600 result a.r.
 # image_crop("100x150+50") # crop out width:100px and height:150px starting +50px from the left
