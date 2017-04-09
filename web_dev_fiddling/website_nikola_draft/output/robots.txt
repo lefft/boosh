@@ -1,0 +1,4 @@
+Sitemap: http://lefft.xyz/dev/bewshe/sitemapindex.xml
+
+User-Agent: *
+Host: lefft.xyz
