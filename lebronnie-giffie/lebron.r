@@ -7,10 +7,14 @@
 ### r example
 library("magick")
 library("magrittr")
+library("extrafont")
 
 siggie <- " @lefft \n c/o: animation domination high-def "
 
-dir("in/")[endsWith(dir("in/"), ".png")] %>% 
+pix <- dir("in/")[endsWith(dir("in/"), ".png")]
+
+dir("in/")[endsWith(dir("in/"), ".png")][1:2] %>% 
+  # (function(x) c(c("1a-lo.png","1b-mid.png","1c-hi.png"), x)) %>%
   (function(x) paste0("in/", x)) %>% 
   image_read() %>% 
   image_fill(color="transparent", point="+300+300", fuzz=10000) %>%  # cut bg
@@ -18,11 +22,11 @@ dir("in/")[endsWith(dir("in/"), ".png")] %>%
   image_fill(color="transparent", point="+10+1590", fuzz=10000) %>%  # cut bot
   # image_crop("1200x1600+750") %>% # get middle-ish of pic
   image_crop("2000x1600+0") %>%     # just cut the logo part off
-  image_scale("x700") %>% 
+  image_scale("x600") %>% 
   image_join() %>% 
   image_animate(fps=4) %>% 
-  image_annotate(siggie, location="+30+660", color="gray", font="courier", size=16) %>%
-  image_write(path="out/bron-signed6.gif", quality=100, flatten=FALSE)
+  image_annotate(siggie, location="+35+558", color="gray", font="Andale-Mono", size=18) %>%
+  image_write(path="out/bron-noo-13frames-2.gif", quality=10, flatten=FALSE)
 
 # shd be 1300x1600 result a.r.
 # image_crop("100x150+50") # crop out width:100px and height:150px starting +50px from the left
