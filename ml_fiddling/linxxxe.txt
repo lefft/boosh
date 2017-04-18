@@ -1,0 +1,6 @@
+
+
+http://blog.districtdatalabs.com/data-exploration-with-python-1
+http://blog.districtdatalabs.com/data-exploration-with-python-2
+http://blog.districtdatalabs.com/data-exploration-with-python-3
+
