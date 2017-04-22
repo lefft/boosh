@@ -23,7 +23,7 @@ this repo is a sandbox for fiddling around, sketching out ideas, learning new te
 <br>
 
 > `fdr_posthoc_exclusion_sim/`
-	copy of chemla blog post on flexible outlier exclusion criteria in RT studies, discuss whether this is a real problem. ultimately will apply this strategy to cases w messy data, unbalanced designs, etc. 
+	copy of chemla blog post on flexible outlier exclusion criteria in RT studies, discuss whether this is a real problem. ultimately will apply this strategy to cases w messy data, unbalanced designs, etc. (note that `ml_fiddling/haus_price/FDR_simstudy.ipynb` is a similar lil sim abt fdr + multiple comparisons) 
 
 <br>
 
@@ -57,11 +57,8 @@ this repo is a sandbox for fiddling around, sketching out ideas, learning new te
 
 > mixed effects logistic regression w `pyMC`: [same dude, also v nice](https://dsaber.com/2016/08/27/analyze-your-experiment-with-a-multilevel-logistic-regression-using-pymc3/) (note: previous post sufficient background for this one)
 
-<br>
 
-> ...
 
-<br>
 ...
 <br>
 
