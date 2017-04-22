@@ -1,0 +1,195 @@
+---
+title: "Post-hoc criteria for spotting outliers"
+author: ""
+date: "apr19/2017"
+output: html_document
+---
+
+```{r setup, echo=FALSE}
+knitr::opts_chunk$set(echo=TRUE)
+```
+
+
+
+<h3>How evil is it to exclude extreme data points without setting an a priori threshold for doing so?</h3>
+
+<p>It is standard to exclude extreme datapoints for an analysis and there are good reasons for doing so. For instance, if we look at response times:
+<ul>
+<li> very fast RTs may correspond to cases in which the stimulus was not processed (and hence may not reflect anything about the underlying processes under study)</li>
+<li> very slow RTs may correspond to cases in which something different than normal processing happened (say the participants got distracted or checked his/her email before responding...), which would mostly contribute noise.</li>
+</ul>
+A tricky question however is: how do we set the threshold for excluding datapoints? In this note we worry that exploring several possible thresholds in the analysis phase may be the same sin as multiple comparisons: by taking a multiple perspective on the data set, we artificially increase the chance of finding a low <i>p</i>-value. Fortunately, simulations show that it does not screw the <i>p</i>-values too much (more precisely, the rate of false positives does not increase dramatically). </p>
+
+<p><b>Take home message:</b> as a reviewer, if you see suspicious thresholds, don't be exaggerately skeptical.</p>
+
+
+<h3>Simulations</h3>
+
+<p><i>[The original R script for these simulations is in `orig-code.R`, I would be happy to see the result for a higher number of data points per simulations, that is replacing `Part <- 40` with `Part <- 80` for instance so that more values are excluded (although the same <b>proportion</b> would be excluded).]</i></p>
+
+<p>To evaluate the situation, we ran 1000 simulations. Each of these simulations were as follows:
+<ol type="a">
+<li> 40 datapoints were sampled from a gaussian distribution</li>
+<li> The first half of these datapoints were arbitrarily called "condition A" and the second half "condition B"</li>
+<li> We collected the <i>p</i>-value from a <i>t</i>-test comparing conditions A and B</li>
+</ol>
+
+<p>In an ideal world, such simulations in which the conditions are meaningless should yield a non-significant test. But of course, running the above 1000 times, we expect to obtain 5% of (false) positive outcomes at the significance threshold p<.05.</p>
+
+<p>What happens to this number of false positives if we allow ourselves to ignore part of the data? Let's say we investigate several RT thresholds beyond which we consider that the datapoints are outliers. To assess this, we ran three more tests on the same simulated data:
+<ol>
+<li>We replaced the <i>p</i>-values of the <i>t</i>-test in (c) with the minimum of 25 <i>p</i>-values, obtained by excluding 0%, 2.5%, 5%, 7.5% or 10% of the data on the upper side, on the lower side, or on both sides. </li>
+<li>We replaced the <i>p</i>-values of the <i>t</i>-test in (c) with the minimum of 25 <i>p</i>-values, obtained as above but with replacement: datapoints were not excluded but replaced with the threshold of exclusion.</li>
+<li>We replaced the <i>p</i>-values of the <i>t</i>-test in (c) with the minimum of 25 <i>p</i>-values, obtained as above but we based the exclusion criterion on another set of simulated values. This would correspond to a case in which you may analyze some kind of response but exclude datapoints based on response <b>times</b>.</li>
+</ol>
+
+<p>These manipulations should mechanically increase the rate of false positives since the target <i>p</i>-values is replaced with a lower value based not only on the result of one <i>t</i>-test, but on the results of 25 tests (including the original one). The rates of false positives as well as the <i>p</i>-value significance threshold needed to obtain a false positive rate (FPR) of 5% are given in the following table:</p>
+
+
+<table class="bottomBorder">
+<tr><td>- <strong>Simulation</strong> </td>
+	<td style='text-align:right'>num fp </td>
+	<td style='text-align:right'>pct fp (FDR)</td>
+	<td style='text-align:right'>pval (5% FDR)</td></tr>
+<tr><td>- Core <i>p</i>-value</td>
+	<td style='text-align:right'>52/1000 </td>
+	<td style='text-align:right'>5.2%</td>
+	<td style='text-align:right'>.0477</td></tr>
+<tr><td>- Min of 25 <i>p</i>-values with exclusion</td>
+	<td style='text-align:right'>239/1000</td>
+	<td style='text-align:right'>23.9%</td>
+	<td style='text-align:right'>.00923</td></tr>
+<tr><td>- Min of 25 <i>p</i>-values with replacement</td>
+	<td style='text-align:right'>72/1000</td>
+	<td style='text-align:right'>7.2%</td>
+	<td style='text-align:right'>.0363</td></tr>
+<tr><td>- Min of 25 <i>p</i>-values with exclusion based on an independent measure</td>
+	<td style='text-align:right'>114/1000</td>
+	<td style='text-align:right'>11.4%</td>
+	<td style='text-align:right'>.0181</td></tr>
+</table>
+
+
+<p>Overall, the results of these simulations show that exploring several thresholds extensively do not reduce the specificity of the test dramatically. In particular, even though it is based on 25 repeated tests, multiplying the <i>p</i>-value by 4 or 5 is a sufficient correction, and 2 or 3 is already a rather safe option.</p>
+
+
+<p>Hence, even doing wild explorations of possible thresholds (who would do such a thing as trying systematically 4 or 5 thresholds on each and both sides?) does not increase the rate of false positives unreasonably. Intuitively, the result is that excluding a couple of data points does not alter the core of the data (at least in a gaussian world), and specially if we exclude extreme data points which presumably do belong to a rare class of events that were observed by chance.</p>
+
+
+<h3>Further questions</h3>
+
+  - What happens if the data does not come from a normal distribution and/or if we use non-parametric tests?
+  - To put it differently: 
+    * what happens if we do this threshold exploration with data of another shape?
+    * what if we commit multiple sins at the same time?
+
+<p><i>[Note: Corresponding simulations should be easy to run with small modifications of `orig-code.R`: change the test and/or the distribution from which the data is sampled (the `rnorm()` command).]</i></p>
+
+
+<style type="text/css">
+table.bottomBorder { 
+  border-collapse:collapse; 
+  border:2px solid; 
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.bottomBorder td, table.bottomBorder th { 
+  border-bottom:1px solid;
+  padding:5px; 
+}
+</style>
+
+
+
+```{r}
+Part <- 40
+REP <- 100
+
+pvaluefromreplace <- function (M,C,D,ql,qh, replace=T) {
+	if (ql) {QL <- quantile(D[[M]], ql)} else {QL <- min(D[[M]])-1}
+	if (qh) {QH <- quantile(D[[M]], 1-qh)} else {QH <- max(D[[M]])+1}
+	if (!replace) { DD <- subset(D, D[[M]]>QL & D[[M]]<QH) }
+	else {
+		DD <- D
+		RL <- DD[[M]] < QL
+			DD[[M]][RL] <- QL
+		RH <- DD[[M]] > QH
+			DD[[M]][RH] <- QH
+		}
+	a <- summary(aov(DD[[M]]~DD[[C]]))
+	return(a[[1]][["Pr(>F)"]][1])	
+	}
+
+pvaluefrom <- function (M,C,D,R) {
+	DD <- subset(D, R)
+	a <- summary(aov(DD[[M]]~DD[[C]]))
+	return(a[[1]][["Pr(>F)"]][1])	
+	}
+
+
+
+
+X <- data.frame(Cond = rep(1:2, each=Part/2))
+RESULTS <- data.frame(simulation=NULL, replacement=NULL, differentmeasure=NULL, lowexclusion=NULL, highexclusion=NULL, pvalue=NULL)
+
+for (x in 1:REP) {
+#	print(x)
+	X$RT <- rnorm(Part)
+	X$EXCL <- rnorm(Part)
+	
+	for (ql in c(0, .025, .05, .075, .1)) { for (qh in c(0, .025, .05, .075, .1)) {
+	
+			L <- data.frame(simulation=x, replacement=TRUE, differentmeasure=FALSE, lowexclusion=ql, highexclusion=qh, 
+				pvalue= pvaluefromreplace("RT", "Cond", X, ql, qh, replace=T)
+				)
+			RESULTS <- rbind(RESULTS, L)
+
+			if (ql>0 | qh>0) {
+				L <- data.frame(simulation=x, replacement=FALSE, differentmeasure=FALSE, lowexclusion=ql, highexclusion=qh, 
+					pvalue= pvaluefromreplace("RT", "Cond", X, ql, qh, replace=F)
+					)
+				RESULTS <- rbind(RESULTS, L)
+
+				L <- data.frame(simulation=x, replacement=FALSE, differentmeasure=TRUE, lowexclusion=ql, highexclusion=qh, 
+					pvalue= pvaluefrom("RT","Cond",X,X$EXCL>quantile(X$EXCL,ql) & X$EXCL<quantile(X$EXCL,1-qh))
+					)
+				RESULTS <- rbind(RESULTS, L)
+				}
+	
+	}}
+	
+}
+
+# Single p-value
+	# SUBRES <- subset(RESULTS, lowexclusion==0 & highexclusion==0)
+	# tim replace -- use of subset causes problems here (maybe bc of knit)
+	SUBRES <- RESULTS[RESULTS$lowexclusion==0 & RESULTS$highexclusion==0, ]
+	with(SUBRES, table(pvalue<.05))
+	with(SUBRES, quantile(pvalue, .05))
+	
+# Multiple thresholds, without replacement
+	# tim replace -- use of subset causes problems here (maybe bc of knit)
+	# SUBRES <- subset(RESULTS, (replacement==FALSE & differentmeasure==FALSE) | (lowexclusion==0 & highexclusion==0))
+	SUBRES <- RESULTS[
+	  (RESULTS$replacement==FALSE & RESULTS$differentmeasure==FALSE) | 
+	    (RESULTS$lowexclusion==0 & RESULTS$highexclusion==0), 
+	 ]
+	SUBRES <- aggregate(pvalue~simulation, min, data=SUBRES)
+	with(SUBRES, table(pvalue<.05))
+	with(SUBRES, quantile(pvalue, .05))
+
+# Multiple thresholds, with replacement
+	SUBRES <- subset(RESULTS, replacement==TRUE & differentmeasure==FALSE)
+	SUBRES <- aggregate(pvalue~simulation, min, data=SUBRES)
+	with(SUBRES, table(pvalue<.05))
+	with(SUBRES, quantile(pvalue, .05))
+
+# Multiple thresholds, different measure (without replacement)
+	SUBRES <- subset(RESULTS, (replacement==FALSE & differentmeasure==TRUE) | (lowexclusion==0 & highexclusion==0))
+	SUBRES <- aggregate(pvalue~simulation, min, data=SUBRES)
+	with(SUBRES, table(pvalue<.05))
+	with(SUBRES, quantile(pvalue, .05))
+
+```
+
