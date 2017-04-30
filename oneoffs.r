@@ -1,5 +1,5 @@
-
-
+# dump old history i dont need (free space)
+# git gc --aggressive --prune
 
 # apr19/2017 
 # note that the following are "equivalent" *but* 
@@ -17,3 +17,32 @@ sep1(.9, 1000); sep2(.9, 1000)
 # question: also is it related to why table renders wrong in post-rewrite.rmd?
 
 # weird, when u take off numbering from table row it fuqqs up!
+
+
+# apr27/2017
+# nice ex of using parallel to apply-family funcs
+library("parallel")
+boot_df <- function(x){
+  x[sample(nrow(x), replace=TRUE), ]
+}
+rsq <- function(mob){
+  summary(mob)$r.squared
+}
+boot_lm <- function(...){
+  rsq(lm(mpg ~ wt + disp, data=boot_df(mtcars)))
+}
+
+# sizes <- c(1,10,100,1000,10000)
+sizes <- 100000
+container <- list()
+for (x in seq_along(sizes)){
+  call_one <- system.time(lapply(1:sizes[x], boot_lm))
+  call_par <- system.time(mclapply(1:sizes[x], boot_lm))
+  container[[x]] <- c(base=call_one["elapsed"], parallel=call_par["elapsed"])
+  names(container)[x] <- paste0("size_", as.character(x))
+  print(paste0("done with ", x))
+}
+
+# always member u can directly call bash commands w, e.g.:
+system("touch build.r")
+system("git status")
