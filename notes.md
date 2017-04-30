@@ -11,7 +11,9 @@ python -c "with open('%textfile%', 'rw') as f: f.write(f.read().replace('%search
 
 2. compare auto theory building idea to goodman auto hyp gen paper
 
-3. ...
+3. blog post on string interpolation for programming with dplyr?! (see rainin code i think)
 
 4. ...
+
+5. ...
 
