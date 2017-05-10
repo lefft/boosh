@@ -1,0 +1,17 @@
+Package: monads
+Version: 0.0.0.9000
+Description: Tools for monads.
+Title: Work with Monads in R
+URL: https://github.com/hadley/monads
+BugReports: https://github.com/hadley/monads/issues
+Authors@R: c(
+    person("Hadley", "Wickham", , "hadley@rstudio.com", role = c("aut", "cre")),
+    person("Joe", "Cheng", , "joe@rstudio.com", role = "aut"),
+    person("RStudio", role = "cph")
+  )
+License: GPL-3
+LazyData: true
+Imports:
+    purrr
+Suggests: shiny
+RoxygenNote: 5.0.1
