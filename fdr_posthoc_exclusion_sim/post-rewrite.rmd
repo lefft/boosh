@@ -1,7 +1,7 @@
 ---
 title: "Post-hoc criteria for spotting outliers"
-author: ""
-date: "apr19/2017"
+author: "(from emmanuel chemla's webpage)"
+date: "apr19/2017 (reformat/annotate by me)"
 output: html_document
 ---
 

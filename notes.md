@@ -13,7 +13,9 @@ python -c "with open('%textfile%', 'rw') as f: f.write(f.read().replace('%search
 
 3. blog post on string interpolation for programming with dplyr?! (see rainin code i think)
 
-4. ...
+4. cheque out reprozip/reprounzip examples ([here](https://github.com/ViDA-NYU/reprozip-examples/tree/master/django-blog) is an ex of a simple website w db connection)
 
 5. ...
+
+6. ...
 
