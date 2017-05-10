@@ -57,8 +57,31 @@ this repo is a sandbox for fiddling around, sketching out ideas, learning new te
 
 > mixed effects logistic regression w `pyMC`: [same dude, also v nice](https://dsaber.com/2016/08/27/analyze-your-experiment-with-a-multilevel-logistic-regression-using-pymc3/) (note: previous post sufficient background for this one)
 
+<br>
+
 > `webPPL` textbook to work thru/see if necessary to work thru: [here](https://probmods.org/chapters/02-generative-models.html)
 
+<br>
+
+> [ppl intro](https://github.com/GalvanizeOpenSource/probabilistic-programming-intro)
+
+<br>
+
+> 
+
+<br>
+
+> 
+
+<br>
+
+> 
+
+<br>
+
+> 
+
+<br>
 ...
 <br>
 
