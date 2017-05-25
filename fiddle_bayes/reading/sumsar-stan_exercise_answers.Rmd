@@ -1,0 +1,665 @@
+#Answers to Bayesian Computation with Stan and Farmer Jöns"
+*Rasmus Bååth*
+
+One thing to note is that the code changes you have to make between questions often are *minimal*. Yet we go from running a simple binomial model to running a pretty advanced linear model.
+
+All answers below use wide "sloppy" uniform priors, and these could certainly be shaped up and be made more informative. 
+
+## Question I
+
+Not much to do here, other than to run it. Here is the graph you would see if everything is working properly.
+
+```{r message=FALSE, echo=FALSE, results='hide'}
+library(rstan)
+
+# The Stan model as a string.
+model_string <- "
+data {
+  # Number of data points
+  int n1;
+  int n2;
+  # Number of successes
+  int y1[n1];
+  int y2[n2];
+}
+
+parameters {
+  real<lower=0, upper=1> theta1;
+  real<lower=0, upper=1> theta2;
+}
+
+model {  
+  theta1 ~ beta(1, 1);
+  theta2 ~ beta(1, 1);
+  y1 ~ bernoulli(theta1);
+  y2 ~ bernoulli(theta2); 
+}
+
+generated quantities {
+}
+"
+
+y1 <- c(0, 1, 0, 0, 0, 0, 1, 0, 0, 0)
+y2 <- c(0, 0, 1, 1, 1, 0, 1, 1, 1, 0)
+data_list <- list(y1 = y1, y2 = y2, n1 = length(y1), n2 = length(y2))
+
+# Compiling and producing posterior samples from the model.
+stan_samples <- stan(model_code = model_string, data = data_list)
+
+# Plotting and summarizing the posterior distribution
+stan_samples
+plot(stan_samples)
+
+```
+
+
+## Question 2
+
+```{r}
+s <- as.data.frame(stan_samples)
+mean(abs(s$theta2 - s$theta1) < 0.2)
+```
+
+## Question 3
+
+```{r message=FALSE, results='hide'}
+cowA <- c(0, 1, 0, 0, 0, 0, 1, 0, 0, 0)
+cowB <- c(0, 0, 1, 1, 1, 0, 1, 1, 1, 0)
+
+# Using the same model as in Question 1, just using the new data. 
+
+data_list <- list(y1 = cowA, y2 = cowB, n1 = length(cowA), n2 = length(cowB))
+
+# Compiling and producing posterior samples from the model.
+stan_samples <- stan(model_code = model_string, data = data_list)
+
+```
+
+```{r}
+# Plotting and summarizing the posterior distribution
+stan_samples
+plot(stan_samples)
+```
+
+
+Calculate the probability that medicine A is better than medicine B.
+
+```{r}
+s <- as.data.frame(stan_samples)
+mean(s$theta1 > s$theta2)
+mean(s[,"theta1"] > s[,"theta2"])
+```
+
+So should probably go with medicine B then...
+
+## Question 4
+
+
+```{r message=FALSE, results='hide'}
+# The Stan model as a string.
+model_string <- "
+data {
+  int n1;
+  int n2;
+  vector[n1] y1;
+  vector[n2] y2;
+}
+
+parameters {
+  real mu1;
+  real mu2;
+  real<lower=0> sigma1;
+  real<lower=0> sigma2;
+}
+
+model {  
+  mu1 ~ uniform(0, 2000);
+  mu2 ~ uniform(0, 2000);
+  sigma1 ~ uniform(0, 1000);
+  sigma2 ~ uniform(0, 1000);
+  y1 ~ normal(mu1, sigma1);
+  y2 ~ normal(mu2, sigma2); 
+}
+
+generated quantities {
+}
+"
+
+diet_milk <- c(651, 679, 374, 601, 401, 609, 767, 709, 704, 679)
+normal_milk <- c(798, 1139, 529, 609, 553, 743, 151, 544, 488, 555, 257, 692, 678, 675, 538)
+data_list <- list(y1 = diet_milk, y2 = normal_milk, 
+                  n1 = length(diet_milk), n2 = length(normal_milk))
+
+# Compiling and producing posterior samples from the model.
+stan_samples <- stan(model_code = model_string, data = data_list)
+```
+
+```{r}
+# Plotting and summarizing the posterior distribution
+stan_samples
+plot(stan_samples)
+```
+
+
+Is it likely that the diet is going to make the cows produce more milk on average?
+
+```{r}
+s <- as.data.frame(stan_samples)
+mu_diff <- s$mu2 - s$mu1 
+hist(mu_diff)
+mean(mu_diff > 0)
+mean(mu_diff < 0)
+```
+
+It is almost as likely that the diet is better as that the diet is worse. So this experiment does not really support that the diet will result in the cows producing more milk .
+
+## Question 5
+
+
+```{r message=FALSE, results='hide'}
+# The Stan model as a string.
+model_string <- "
+data {
+  int n1;
+  int n2;
+  vector[n1] y1;
+  vector[n2] y2;
+}
+
+parameters {
+  real mu1;
+  real mu2;
+  real<lower=0> sigma1;
+  real<lower=0> sigma2;
+}
+
+model {  
+  mu1 ~ uniform(0, 2000);
+  mu2 ~ uniform(0, 2000);
+  sigma1 ~ uniform(0, 1000);
+  sigma2 ~ uniform(0, 1000);
+  y1 ~ student_t(3, mu1, sigma1);
+  y2 ~ student_t(3, mu2, sigma2);
+}
+
+generated quantities {
+}
+"
+
+diet_milk <- c(651, 679, 374, 601, 4000, 401, 609, 767, 3890, 704, 679)
+normal_milk <- c(798, 1139, 529, 609, 553, 743, 3,151, 544, 488, 15, 257, 692, 678, 675, 538)
+data_list <- list(y1 = diet_milk, y2 = normal_milk, 
+                  n1 = length(diet_milk), n2 = length(normal_milk))
+
+# Compiling and producing posterior samples from the model.
+stan_samples <- stan(model_code = model_string, data = data_list)
+```
+
+```{r}
+# Plotting and summarizing the posterior distribution
+stan_samples
+plot(stan_samples)
+```
+
+Is it likely that diet is going to make the cows produce more milk on average?
+
+```{r}
+s <- as.data.frame(stan_samples)
+mu_diff <- s$mu2 - s$mu1
+hist(mu_diff)
+mean(mu_diff > 0) 
+mean(mu_diff < 0)
+
+```
+
+Again there is no strong evidence that the diet is any good (but compare with the result, would you have used the original Normal model!).
+
+
+## Question 6
+
+
+```{r message=FALSE, results='hide'}
+# The Stan model as a string.
+model_string <- "
+data {
+  int n1;
+  int n2;
+  int y1[n1];
+  int y2[n2];
+}
+
+parameters {
+  real<lower=0> lambda1;
+  real<lower=0> lambda2;
+}
+
+model {  
+  lambda1 ~ uniform(0, 100);
+  lambda2 ~ uniform(0, 100);
+  y1 ~ poisson(lambda1);
+  y2 ~ poisson(lambda2); 
+}
+
+generated quantities {
+}
+"
+
+diet_eggs <- c(6, 4, 2, 3, 4, 3, 0, 4, 0, 6, 3)
+normal_eggs <- c(4, 2, 1, 1, 2, 1, 2, 1, 3, 2, 1)
+data_list <- list(y1 = diet_eggs, y2 = normal_eggs, 
+                  n1 = length(diet_eggs), n2 = length(normal_eggs))
+
+# Compiling and producing posterior samples from the model.
+stan_samples <- stan(model_code = model_string, data = data_list)
+```
+
+```{r}
+# Plotting and summarizing the posterior distribution
+stan_samples
+plot(stan_samples)
+```
+
+
+Is it likely that diet going to make the chickens produce more eggs on average?
+
+```{r}
+s <- as.data.frame(stan_samples)
+lambda_diff <- s$lambda1 - s$lambda2 
+hist(lambda_diff)
+mean(lambda_diff > 0)
+
+```
+
+There is pretty good evidence that the diet is effective and that chickens on the diet produce more eggs on average (that is, lambda1 seems higher than lambda2). Looking at `lambda_diff` a "best guess" is that the diet results in around 1-2 more eggs on average. 
+
+
+## Question 7
+
+This implements the same model as in question 4, but using smarter indexing so that the code is not as redundant and so that it works with the format of the data in the data.frame `d` .
+
+```{r message=FALSE, results='hide'}
+# The Stan model as a string.
+model_string <- "
+data {
+  int n;
+  int n_groups;
+  int x[n];
+  vector[n] y;
+}
+
+parameters {
+  vector[n_groups] mu;
+  vector<lower=0>[n_groups] sigma;
+}
+
+model {  
+  mu ~ uniform(0, 2000);
+  sigma ~ uniform(0, 1000);
+  y ~ normal(mu[x], sigma[x]);
+}
+
+generated quantities {
+}
+"
+
+d <- data.frame(
+  milk = c(651, 679, 374, 601, 401, 609, 767, 709, 704, 679, 798, 1139,
+           529, 609, 553, 743, 151, 544, 488, 555, 257, 692, 678, 675, 538),
+  group = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2))
+data_list <- list(y = d$milk, x = d$group, n = length(d$milk), 
+                  n_groups = max(d$group))
+
+# Compiling and producing posterior samples from the model.
+stan_samples <- stan(model_code = model_string, data = data_list)
+```
+
+```{r}
+# Plotting and summarizing the posterior distribution
+stan_samples
+plot(stan_samples)
+```
+
+
+This should give you the same result as in question 4.
+
+## Question 8
+
+Amazingly we don't have to change the model at all from question 7, we can just rerun it with the new data. That is, if we were smart with how we defined the priors and instead of writing:
+
+```
+mu[1] ~ uniform(0, 2000);
+mu[2] ~ uniform(0, 2000);
+```
+
+simply wrote `mu ~ uniform(0, 2000);`.
+
+```{r,  message=FALSE, warning=FALSE, results='hide'}
+d <- data.frame(
+  milk = c(651, 679, 374, 601, 401, 609, 767, 709, 704, 679, 798, 1139, 529,
+           609, 553, 743, 151, 544, 488, 555, 257, 692, 678, 675, 538, 1061,
+           721, 595, 784, 877, 562, 800, 684, 741, 516),
+  group = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3))
+
+data_list <- list(y = d$milk, x = d$group, n = length(d$milk), 
+                  n_groups = max(d$group))
+
+
+# Compiling and producing posterior samples from the model.
+stan_samples <- stan(model_code = model_string, data = data_list)
+```
+
+```{r}
+# Plotting and summarizing the posterior distribution
+stan_samples
+plot(stan_samples)
+
+# Now comparing the tree different groups.
+s <- as.data.frame(stan_samples)
+hist(s[,"mu[3]"] - s[,"mu[1]"] )
+hist(s[,"mu[3]"] - s[,"mu[2]"] )
+mean(s[,"mu[3]"] - s[,"mu[1]"] > 0)
+mean(s[,"mu[3]"] - s[,"mu[2]"] > 0)
+```
+
+
+So it is pretty likely that diet 2 (`mu[3]`) is better than both diet 1 (`mu[2]`) and using no special diet (`mu[1]`).
+
+## Question 9
+
+So, let's change the model from question 7 into a regression model!
+
+```{r message=FALSE, warning=FALSE, results='hide'}
+# The Stan model as a string.
+model_string <- "
+data {
+  int n;
+  vector[n] x;
+  vector[n] y;
+}
+
+parameters {
+  real beta0;
+  real beta1;
+  real<lower=0> sigma;
+}
+
+model {  
+  vector[n] mu;
+  beta0 ~ uniform(-1000, 1000);
+  beta1 ~ uniform(-1000, 1000);
+  sigma ~ uniform(0, 1000);
+  mu = beta0 + beta1 * x;
+  y ~ normal(mu, sigma);
+}
+
+generated quantities {
+}
+"
+
+d <- data.frame(milk = c(685, 691, 476, 1151, 879, 725, 1190, 1107, 809, 539,
+                         298, 805, 820, 498, 1026, 1217, 1177, 684, 1061, 834),
+                hours = c(3, 7, 6, 10, 6, 5, 10, 11, 9, 3, 6, 6, 3, 5, 8, 11, 
+                          12, 9, 5, 5))
+data_list <- list(y = d$milk, x = d$hours, n = length(d$milk))
+
+# Compiling and producing posterior samples from the model.
+stan_samples <- stan(model_code = model_string, data = data_list)
+```
+
+
+```{r}
+# Plotting and summarizing the posterior distribution
+stan_samples
+plot(stan_samples)
+
+plot(d$hours, d$milk, xlim=c(0, 13), ylim = c(0, 1300))
+
+# Adding a sample of the posterior draws to the plot in order to visualize the
+# uncertainty of the regression line.
+s <- as.data.frame(stan_samples)
+for(i in sample(nrow(s), size = 20)) {
+  abline(s[i,"beta0"], s[i,"beta1"], col = "gray")
+}
+```
+
+It seems like there is good evidence that an increase in sunshine (or something that co-varies with sunshine perhaps...) results in an increase in milk production.
+
+<!--
+
+This is commented out as we're not doing these exercises, it's too much!
+
+## Question 10
+
+```{r message=FALSE, eval=FALSE}
+
+d <-
+  structure(
+  list(
+  cow = c(
+  1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,
+  4, 4, 4, 4, 4, 4, 4, 4
+  ), hours = c(
+  2, 3, 5, 6, 8, 9, 11, 12, 2, 3, 5, 6,
+  8, 9, 11, 12, 2, 3, 5, 6, 8, 9, 11, 12, 2, 3, 5, 6, 8, 9, 11, 12
+  ),
+  milk = c(
+  672, 1013, 808, 486, 648, 720, 1100, 950, 746, 721, 654, 1156, 964, 505,
+  1104, 903, 560, 817, 829, 975, 1169, 1044, 1722, 1672, 457, 977,
+  896, 794, 1116, 1155, 1228, 1243
+  )
+  ), .Names = c("cow", "hours",
+  "milk"), class = "data.frame", row.names = c(NA,-32L)
+  )
+
+
+data_list <- list(y = d$milk, x = d$hours, cow = d$cow, n_cow = length(unique(d$cow)))
+
+model_string <- "model{
+  # Priors (here just using 'sloppy' uniform distributions)
+  for(cow_i in 1:n_cow) {
+    beta0[cow_i] ~ dunif(-10000, 10000) 
+    beta1[cow_i] ~ dunif(-10000, 10000)
+    sigma[cow_i] ~ dunif(0,10000)
+  }
+
+  for(i in 1:length(y)) {
+    mu[i] <- beta0[cow[i]] + x[i] * beta1[cow[i]]
+    y[i] ~ dnorm(mu[i], 1 / pow( sigma[cow[i]], 2)) 
+  }
+}"
+
+params_to_monitor <- c("beta1")
+
+# Running the model
+model <- jags.model( textConnection(model_string), data_list, n.chains = 3, n.adapt= 1000)
+update(model, 1000); # Burning 1000 samples to the MCMC gods...
+mcmc_samples <- coda.samples(model, params_to_monitor, n.iter=3000)
+
+# Inspect the results
+par(mar = c(4.2, 3, 2, 1))
+plot(mcmc_samples)
+summary(mcmc_samples)
+```
+
+Let's look at the pairwise difference between the estimated slopes of from each cow:
+
+```{r , eval=FALSE}
+s <- as.matrix(mcmc_samples)
+
+par(mfcol = c(4,4), mar = c(4.2, 0, 2, 2))
+slope_range <- range(s[, paste0("beta1[", 1:4, "]")] )
+for(i in 1:4) {
+  for(j in 1:4) {
+    slope_i_name <- paste0("beta1[", i, "]")
+    slope_j_name <- paste0("beta1[", j, "]")
+    slope_i <- s[,slope_i_name]
+    slope_j <- s[,slope_j_name]
+    slope_diff <- slope_i - slope_j
+    hist(slope_diff, 30, main = "", xlim = slope_range, 
+         xlab = paste("Cow ", i, " - ", "Cow ", j), col = "lightblue")
+  }
+}
+```
+
+It seems that 3rd and 4th cow are more responsive to the sunshine than two other cows (1st and 2nd one) and as a result they produce more milk in response to the sunshine exposition.
+
+Question 11
+----------------------
+
+```{r message=FALSE, eval=FALSE}
+
+d <- structure(list(cow = c(1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3,
+                            3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5,
+                            6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 
+                            8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10), 
+                            hours = c(2, 3, 5, 6, 8, 9, 11, 12, 2, 3, 5, 6, 8, 9, 11, 12, 
+                            2, 3, 5, 6, 8, 9, 11, 12, 2, 3, 5, 6, 8, 9, 11, 12, 2, 3, 5, 6,
+                            8, 9, 11, 12, 2, 3, 5, 6, 8, 9, 11, 12, 2, 3, 5, 6, 8, 9, 11, 12,
+                            2, 3, 5, 6, 8, 9, 11, 12, 2, 3, 5, 6, 8, 9, 11, 12, 2, 3, 5, 6, 8, 
+                            9, 11, 12), milk = c(891, 742, 796, 761, 674, 1166, 955, 485, 806, 605, 552,
+                            755, 660, 752, 839, 660, 941, 891, 806, 1371, 1379, 1322, 1733, 1817, 849, 864, 
+                            921, 840, 876, 903, 924, 1064, 435, 1165, 1061, 639, 870, 902, 
+                            1239, 1110, 834, 869, 1049, 1422, 1286, 1726, 1296, 1814, 732, 
+                            805, 945, 823, 964, 881, 978, 1307, 694, 617, 795, 1022, 518, 
+                            157, 824, 483, 501, 863, 640, 472, 791, 747, 814, 910, 579, 809, 
+                            689, 826, 1032, 927, 828, 1149)), .Names = c("cow", "hours", "milk"),
+                            class = "data.frame", row.names = c(NA, -80L))
+
+data_list <- list(y = d$milk, x = d$hours, cow = d$cow, n_cow = length(unique(d$cow)))
+
+model_string <- "model{
+  # Priors (here just using 'sloppy' uniform distributions)
+  for(cow_i in 1:n_cow) {
+    beta0[cow_i] ~ dnorm(beta0mu, 1 / pow( beta0sigma, 2)) 
+    beta1[cow_i] ~ dnorm(beta1mu, 1 / pow( beta1sigma, 2))
+    sigma[cow_i] ~ dunif(0,10000)
+  }
+  beta0mu ~ dunif(-10000,10000)
+  beta1mu ~ dunif(-10000,10000)
+  beta0sigma ~ dunif(0,10000)
+  beta1sigma ~ dunif(0,10000)
+
+  for(i in 1:length(y)) {
+    mu[i] <- beta0[cow[i]] + x[i] * beta1[cow[i]]
+    y[i] ~ dnorm(mu[i], 1 / pow( sigma[cow[i]], 2)) 
+  }
+}"
+
+params_to_monitor <- c("beta0mu","beta1mu", "beta0sigma", "beta1sigma"   )
+
+# Running the model
+model <- jags.model( textConnection(model_string), data_list, n.chains = 3, n.adapt= 1000)
+update(model, 1000); # Burning 1000 samples to the MCMC gods...
+mcmc_samples <- coda.samples(model, params_to_monitor, n.iter=3000)
+
+# Inspect the results
+par(mar = c(4.2, 3, 2, 1))
+plot(mcmc_samples)
+summary(mcmc_samples)
+```
+
+We have so many parameters now, and there is many things we could look at. We could start at looking at `beta1mu` the estimated mean increase of liters of milk per extra hour of sunshie in the Cow population:
+
+```{r , eval=FALSE}
+s <- as.matrix(mcmc_samples)
+
+quantile(s[,"beta1mu"], c(0.025, 0.5, 0.975))
+hist(s[,"beta1mu"])
+```
+
+A guess is that, on average, we would expect one hour of sun to result in 30 more liters of milk. To look at the uncertainty in the estimate we can plot the original data and on that plot a scatter of lines drawn from the estimated Cow population:
+
+```{r, eval=FALSE}
+plot(d$hours, d$milk, type = "n", ylim = c(0, 2000))
+for(i in unique(d$cow)) {
+  lines(d$hours[ d$cow == i], d$milk[ d$cow == i], type = "l", col = "blue", lwd = 2)  
+}
+
+for(i in sample(nrow(s), 20)) {
+  beta0 <- rnorm(1, s[i, "beta0mu"], s[i, "beta0sigma"])
+  beta1 <- rnorm(1, s[i, "beta1mu"], s[i, "beta1sigma"])
+  abline(beta0, beta1, col = "grey")
+}
+
+```
+
+## Question 12
+
+```{r message=FALSE, eval=FALSE}
+
+d <- structure(list(test_intensity = c(6, 6, 6, 6, 6, 6, 6, 6, 6, 
+                                    6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 
+                                    9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 
+                                    10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 
+                                    12, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 
+                                    14, 14, 14, 14, 14, 14, 14, 14, 14, 14), choice = c(0, 0, 1, 
+                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                                    1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 
+                                    0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+                                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 
+                                    1, 1, 0)), .Names = c("test_intensity", "choice"), row.names = c(NA,-90L), 
+                                    class = "data.frame")
+
+
+data_list <- list(response = d$choice, test_intensity = d$test_intensity, 
+                  n_stim = length(d$test_intensity), test_intensity_mean = mean(d$test_intensity))
+
+model_string <- "model{
+  for(i in 1:n_stim) {
+    response[i] ~ dbern (p[i])
+  logit(p[i]) <- alpha + beta * (test_intensity[i] - test_intensity_mean)
+}
+  # Priors
+  alpha ~ dunif(-1000,1000)
+  beta ~ dunif(-1000,1000)
+}"
+
+params_to_monitor <- c("alpha", "beta")
+
+# Running the model
+model <- jags.model( textConnection(model_string), data_list, n.chains = 3, n.adapt= 1000)
+update(model, 1000); # Burning 1000 samples to the MCMC gods...
+mcmc_samples <- coda.samples(model, params_to_monitor, n.iter=3000)
+
+# Inspect the results
+par(mar = c(4.2, 3, 2, 1))
+plot(mcmc_samples)
+summary(mcmc_samples)
+```
+
+Now plotting the psychometric function.
+
+```{r, eval=FALSE}
+s <- as.matrix(mcmc_samples)
+
+
+par(mar = c(5, 4.5, 2, 1))
+
+post_sum <- summary(mcmc_samples)
+post_sum
+
+Test_intensity <- seq(from = 6, to = 14, by = 1)
+p1 <- c(mean(d$choice[1:10]),mean(d$choice[11:20]),mean(d$choice[21:30]),mean(d$choice[31:40]),
+        mean(d$choice[41:50]), mean(d$choice[51:60]), mean(d$choice[61:70]), mean(d$choice[71:80]),
+        mean(d$choice[81:90]))
+plot(Test_intensity, p1, col="black", type="p", xlab = "Test Stimulus Intensity", ylab = "Probability", lwd = 2)
+x2 <- seq(from = 6, to = 14, by = 0.1)
+p2 <- 1/(1+exp(-1*(post_sum$quantiles["alpha", "50%"] + post_sum$quantiles["beta", "50%"] * (x2 - mean(d$test_intensity)))))
+lines(x2, p2, col="red", type="l", lwd = 3)
+
+# Adding a sample of the posterior draws to the plot in order to visualize the
+# uncertainty of the psychometric function
+for(i in sample(nrow(s), size = 50)) {
+  p3 <- 1/(1+exp(-1*(s[i,"alpha"] + s[i,"beta"] * (x2 - mean(d$test_intensity)))))
+  lines(x2, p3, col="grey", type="l")
+}
+
+lines(x2, p2, col="red", type="l", lwd = 3)
+```
+
+
+
+It seems that the "point of subjective equality" (PSE - difference in intensity for which the cow chooses the correct response 50% of the time) is around a light intensity of 10. The *just noticeable difference* (JND - the intensity threshold at which the cow *just* notices a difference in intensity between two stimuli; here we can define the JND to be the difference in stimulus intensity that makes classification performance rise from 50% to 84%) is around an increase in the light intensity of 2.   
+-->
