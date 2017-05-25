@@ -1,4 +1,4 @@
-
+### notes to self etc.
 
 ##### linxe
 
@@ -13,6 +13,8 @@
 - [ppl intro](https://github.com/GalvanizeOpenSource/probabilistic-programming-intro)
 
 - [sk learn examples](http://scikit-learn.org/stable/auto_examples/index.html)
+
+- [nice explanation of how MCMC works](https://eight2late.wordpress.com/2011/02/25/the-drunkard%E2%80%99s-dartboard-an-intuitive-explanation-of-monte-carlo-methods/)
 
 ##### things to do: 
 
