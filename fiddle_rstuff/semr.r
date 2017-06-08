@@ -74,12 +74,14 @@ GAVE <- c(jfm=c("john","felix","mary"),msj=c("mary","sparky","john"))
 #
 # should be true that 'every dog chased a cat' on one reading; not on other
 every(DOG)(BARKED)
+
 for (x in DOG){print(barked(x))}
 
 
 # missing vectorization in some lexical entry :/ 
 #   every(DOG)(function(x){chased("felix")(x)})
 every(DOG)(THING)
+
 for (x in DOG){print(barked(x))}
 
 
