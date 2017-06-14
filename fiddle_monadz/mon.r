@@ -1,10 +1,167 @@
+### jun2017 fiddle start here ########
+
+# starter code from here: 
+#   http://www.win-vector.com/blog/2016/08/the-magrittr-monad/
+
+# First we check that magrittr’s %>% operator obeys the Monad laws when using %>% as “bind” and ret as “return”. For simplicity we would like to think of magrittr as a category over single argument functions (though obviously magrittr works over more values than these, and the big part of the the magrittr service is Currying code fragments into single argument functions).
+
+library("magrittr")
+`%>%` <- `%>%`       # "bind"
+id <- function(x) x  # "return"
+# but what's the type constructor...
+a <- c(1.1,2.6,3.5)     # our values
+f <- floor              # our first function
+g <- function(x) x+10   # our other function
+
+# Axiom 1 Left identity: 
+#   ret(a) %>% f == f(a)
+identical(id(a) %>% f, f(a))
+
+# Axiom 2 Right identity: 
+#   m %>% ret == m
+identical(a %>% id, a)
+
+# Axiom 3 Left Associativity: 
+#   (m %>% f) %>% g == m %>% (function(x) {f(x) %>% g})
+identical(a %>% f %>% g, a %>% (function(x) f(x) %>% g))
+
+
+# In principle we could implement a Kleisli arrow %>=>% operator in addition to the magrittr bind operator (%>%) which would allow code like the following (all four statements below would be equivalent):
+`%>=>%` <- function(f,g) { function(x) {g(f(x))} }
+a %>% (sin %>=>% cos %>=>% abs)
+a %>% ((sin %>=>% cos) %>=>% abs)
+a %>% (sin %>=>% (cos %>=>% abs))
+abs(cos(sin(a)))
+
+
+
+library("purrr")
+mtcars ->.;
+  split(., .$cyl) ->.; 
+  map(., ~lm(mpg ~ wt, data=.)) ->.;
+  map(., summary) ->.;
+  map_dbl(., "r.squared")
+
+
+mtcars %>% 
+  split(.$cyl) %>% 
+  map(~lm(mpg ~ wt, data=.)) %>% 
+  map(summary) %>% 
+  map_dbl("r.squared")
+
+
+
+# tweet: "...you can't write 'sin %>% abs -> f' to later say 
+#         '1:5 %>% f' instead of '1:5 %>% sin %>% abs'
+# resp:  "...but you can write '. %>% sin %>% abs -> f' to later say '1:5 %>% f'
+. %>% sin %>% abs -> f
+functions(f)
+f <- . %>% sin %>% abs
+
+
+########## jun2017 fiddle end here ###
+
+
+url1 <- "http://www.basketballgeek.com/downloads/2008-2009.regular_season.zip"
+
+
+# load hadley funqs
+hadley <- dir("monad_hadley/R", full.names=TRUE)[
+  endsWith(dir("monad_hadley/R", full.names=TRUE), ".R")
+]; invisible(sapply(hadley, source))
+
+maybe(1)
+print.maybe(maybe(NULL))
+
+# a lil alias
+`%p%` <- paste0
+
+"boosh" %p% " blaowwie" %p% " yaowza"
+
+`%+%` <- function(x,y) ifelse(all(is.character(c(x,y))), paste0(x,y), `+`(x,y))
+`%+%` <- paste0
+"3 " %+% "blaowwie " %+% 5
+2%+%3
 # here's a popular monads example use-case that was going around the web a 
 # couple of years ago, getting translated into various languages
 # http://randomlydistributedthoughts.blogspot.com/2014/06/using-writer-monads-in-r.html
 
-# strip parentheses
+
+### jun2017 revisit start here ########
+
+sine <- function(x) {
+  list(sin(x), 'sine was called')
+}
+cube <- function(x) {
+  list(x*x*x, 'cube was called')
+}
+compose <- function(f, g) {
+  function(x) f(g(x))
+}
+
+bind <- function(f) {
+  function(tuple) {
+    x <- unlist(tuple[[1]])
+    s <- tuple[2]
+    fx <- f(x)
+    y <- unlist(fx[1])
+    t <- fx[2]
+    list(y, paste(s, t, '.'))
+  }
+}
+f <- compose(bind(sine), bind(cube))
+unit <- function(x) list(x, '')
+lift <- function(f) compose(unit, f)
+roundDebug <- lift(round)
+
+f <- compose(bind(roundDebug), bind(sine))
+
+f(unit(3))
+
 arg <- function(x) {
   gsub('()', '', x, fixed = T)
+}
+
+Bind <- function(f) {
+  fcall <- arg(match.call(expand.dots = FALSE)[2])
+  function(tuple) {
+    x <- unlist(tuple[[1]])
+    s <- tuple[2]
+    fx <- f(x)
+    y <- unlist(fx[1])
+    t <- fcall
+    list(y, paste(s, '>>=', t))
+  }
+}
+
+Bind(sin)(2)
+
+Unit <- function(x) {
+  fcall <- arg(match.call(expand.dots = FALSE)[2])
+  list(x, fcall)
+}
+
+Unit(3)
+Bind(sin)(Unit(3))
+f <- compose(Bind(sin), Bind(round))
+f(Unit(3))
+
+f <- compose(Bind(tan), compose(Bind(sin), Bind(round)))
+f(Unit(3))
+
+Lift <- function(x) paste(x[[2]], '>>=', x[[1]])
+Lift(f(Unit(3)))
+
+
+Lift(Bind(sin)(Unit(3)))
+Lift(f(Unit(4)))
+
+############### jun2017 revisit end ###
+
+
+# strip parentheses
+arg <- function(x) {
+  gsub('()', '', x, fixed = TRUE)
 }
 
 # compose two functions
@@ -31,7 +188,6 @@ Bind(function(x) x^4)(2)
 Bind(sqrt)(4)
 
 # returns list(x, "x")
-# QUESTION: is Unit here the same as 'Return' elsewhar?!
 Unit <- function(x) {
   fcall <- arg(match.call(expand.dots = FALSE)[2])
   list(x, fcall)
@@ -47,8 +203,21 @@ Lift(Unit(3))
 # f <- compose(Bind(sin), Bind(round))
 f <- compose(Bind(tan), compose(Bind(sin), Bind(round)))
 f(Unit(4))
-Lift(Bind(sin)(Unit(3)))
-Lift(f(Unit(4)))
+
+# goal: modify this call so it rounds to 1 digit
+# Lift(Bind(sin)(Unit(3)))
+boosh <- Lift(
+  (Bind(sin))(
+    Unit(3)
+  )
+)
+Bind(sin)
+Bind(compose(round, sin))(Unit(3.14))
+
+Lift(compose(Bind(ceiling), Bind(sin))(Unit(1:3)))
+
+library("magrittr")
+1:3 %>% sin() %>% ceiling()
 
 
 
