@@ -8,9 +8,13 @@
 
 - m-e logistic regression w `pyMC`: [same dude, also v nice](https://dsaber.com/2016/08/27/analyze-your-experiment-with-a-multilevel-logistic-regression-using-pymc3/) (note: previous post sufficient background for this one)
 
+- tips for facebook data stuff w python [here](http://www.kdnuggets.com/2017/06/6-interesting-things-facebook-python.html)
+
 - `webPPL` textbook to work thru/see if necessary to work thru: [here](https://probmods.org/chapters/02-generative-models.html)
 
 - [ppl intro](https://github.com/GalvanizeOpenSource/probabilistic-programming-intro)
+
+- [bayesian item response theory](http://austinrochford.com/posts/2017-04-04-nba-irt.html) -- with nba data/examples
 
 - [sk learn examples](http://scikit-learn.org/stable/auto_examples/index.html)
 

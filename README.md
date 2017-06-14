@@ -1,58 +1,66 @@
 
 ### sandboxxxe ~~ <(o_0)^ 
 
-this repo is a sandbox for fiddling around, sketching out ideas, learning new technique, practice, etc.
+this repo is a sandbox for fiddling around, sketching out ideas, learning/practicing new techniques, etc.
+
+[also here's this](http://lefft.xyz/img/bron-gif-final.gif)
 
 <br>
 
-##### stuff in here, of apr/2017:
+##### main stuff in here, of jun/2017:
+
 
 > `arithmetic_from_scratch/` 
-	answer the question "how does/can a calculator 'work'," in the sense i have in mind 
-
-<br>
-
-> `bates_lme4/`
-	to read/work thru -- book chapters from bates (2010), includes theory and code examples (using `lme4::`). seems to be two diff books(?), some chaps in rnw source, others just pdf
-
-<br>
-
-> `bronbron_giffie/` 
-	play around w imagemagick via plugins for R (`magick::`) and python (`Wand`/`MagickWand`); make lebron gif from awesome vid by [animation domination high-def](https://www.youtube.com/watch?v=fAufyxBD-tI) (relevant bit around 0:38)
-
-<br>
-
-> `fdr_posthoc_exclusion_sim/`
-	copy of chemla blog post on flexible outlier exclusion criteria in RT studies, discuss whether this is a real problem. ultimately will apply this strategy to cases w messy data, unbalanced designs, etc. (note that `ml_fiddling/haus_price/FDR_simstudy.ipynb` is a similar lil sim abt fdr + multiple comparisons) 
+	answering the question: "how does/can a calculator 'work'," in the sense i've always had in mind. rules are: just base functions; no arithmetic operators; we're allowed to use `identical()` for equality but only container-related stuff otherwise(?); (shd we allow calls to `length()`?!)
 
 <br>
 
 
-> `ml_fiddling/` 
-	practice numpy/pandas data structures + mess around w some scikit-learn models; side-by-side examples in R where useful; also will translate `parser.py` to 3.x as an exercise/bc it would be useful
+> `fdr_simulation/`
+	copy of chemla blog post on flexible outlier exclusion criteria in RT studies, discuss whether this is a real problem. ultimately will apply this strategy to cases w messy data, unbalanced designs, etc. (note that there's a jupyter nb in `fiddle_py/haus_price/` w a lil sim abt fdr + multiple comparisons -- related) 
 
 <br>
 
-> `monad_fp/` 
-	explore monadic structures, incl. magrittr `%>%` pipe (s/o to [this v nice blog post](http://www.win-vector.com/blog/2016/08/the-magrittr-monad/) + [s/o this guy too](http://randomlydistributedthoughts.blogspot.com/2014/06/using-writer-monads-in-r.html)). also for playing w fp concepts more generally
+> `fiddle_bayes/`
+	play around with various techniques for bayesian inference + estimation with stan and pymc 
 
 <br>
 
-> `web_dev/` 
-	practice web development (ugh :/). mite want to use nikola for site rebuild (static site generator, built w python 3.x)
+> `fiddle_monadz/` 
+	haskell sub-sandbox + area to investigate/build monadic structures in R, + to practice useful FP techniques in general. also s/o to [this v nice blog post](http://www.win-vector.com/blog/2016/08/the-magrittr-monad/) + [s/o this guy too](http://randomlydistributedthoughts.blogspot.com/2014/06/using-writer-monads-in-r.html).
 
-> `oneoffs.r` 
-	scratchpads for thoughts/ideas to maybe think/write abt in future
+<br>
+
+> `fiddle_py/` 
+	python sub-sandboxxxe
+
+<br>
+
+> `fiddle_r/`
+	R sub-sandboxxxe
+
+<br>
+
+
+> `fiddle_web/` 
+	web dev sub-sandbox
+
+
+<br>
+
+
+> `hoops/`
+	mess around with nba data; and/or use nba data as vehicle for practicing other stuff e.g. `hoops/lebron_gif/` for playing with imagemagick via plugins for R (`magick::`) and python (`Wand`/`MagickWand`); also shouts to [animation domination high-def](https://www.youtube.com/watch?v=fAufyxBD-tI) (relevant bit around 0:38)
+
+<br>
+
+> `oneoffs/` 
+	stuff that's not mature enough to get its own dir (yet or ever, depending)
 
 
 ...
 <br>
 
-
-> 
-
-<br>
-...
 <br>
 
 boosh!
