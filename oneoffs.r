@@ -1,6 +1,11 @@
 # dump old history i dont need (free space)
 # git gc --aggressive --prune
 
+# to remove a file from all history if it contains info i dont want e.g. smthg sensitive, e.g.:
+# git filter-branch --tree-filter "rm -f hoops/msf/boosh.r" HEAD
+# for ref see:
+#   https://git-scm.com/docs/git-filter-branch
+
 # apr19/2017 
 # note that the following are "equivalent" *but* 
 # the second yields systematically higher values (in the order of 10^-3 or 4)
