@@ -27,7 +27,7 @@ Sys.setenv(.M)
 
 
 # just wrap this in a function or smthg then loop over it
-url <- "https://lefft:utah700@www.mysportsfeeds.com/api/feed/pull/nba/2017-playoff/game_playbyplay.json?gameid=20170612-CLE-GSW"
+url <- "https://<UN:PW>@www.mysportsfeeds.com/api/feed/pull/nba/2017-playoff/game_playbyplay.json?gameid=20170612-CLE-GSW"
 download.file(url=url, destfile="finals-boosh.json", 
               method="auto")
 
