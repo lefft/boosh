@@ -1,0 +1,79 @@
+---
+title: "Untitled"
+author: "timothy leffel"
+date: "6/18/2017"
+output: html_document
+---
+
+```{r setup, message=FALSE, warning=FALSE}
+library("knitr")
+opts_chunk$set(echo=TRUE)
+
+# load dependencies
+library("dplyr");   library("magrittr"); library("reshape2")
+library("ggplot2"); library("ggthemes"); library("jsonlite")
+```
+
+
+okeee, now we can do the actual fun stuffe:
+
+1. lookit lbj stats by minutes played
+2. lookit lbj stats by quarter by minutes played
+3. for each half, lookit lbj stats before + after rest (if any)
+
+```{r}
+
+# load functions + api credentials
+source("msf_functions.r")
+# run the data cleaning routine
+source("msf_cleanup.r")
+```
+
+```{r}
+lbj <- filter(game_logs, ID=="9158")
+kable(head(dat))
+kable(t(lbj))
+kable(head(games))
+kable(head(mutate(play_info, attrs = gsub("\\|", " \\| ", attrs))))
+kable(head(players))
+```
+
+
+
+
+```{r}
+lebron <- game_logs[game_logs$ID=="9158", ]
+nrow(lebron)
+```
+
+
+```{r}
+### 0. known external events that won't be inferrable from data ###############
+
+# 1. draymond game5/2016 suspension
+# 2. ...
+
+### 1. raw and per-min points, reb, ast by minutes played #####################
+# === === === === === === === === === === === === === === === === === === 
+
+game_logs %>% filter(minutes > 0) %>% 
+  group_by(ID, LastName) %>% 
+  summarize(ppg=mean(pts), gp=length(unique(date)), mpg=mean(minutes), 
+            team=unique(team)) %>% 
+  data.frame() %>% arrange(desc(ppg)) %>% filter(ppg > 5) %>% 
+  kable(digits=1, align="lrlllr", 
+        caption="leading scorers in 2016 and 2017 nba finals")
+
+
+### 2. per-min stats by quarter + min played ##################################
+# === === === === === === === === === === === === === === === === === === 
+
+
+
+### 3. for each half, before + after rest #####################################
+# === === === === === === === === === === === === === === === === === === 
+
+
+
+```
+

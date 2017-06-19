@@ -1,0 +1,126 @@
+### **note -- open this in st3 as csv for nice hilites ########################
+# === === === === === === === === === === === === === === === === === === 
+
+# see also disone: 
+	https://cran.r-project.org/web/packages/data.tree/vignettes/data.tree.html
+
+# unique vals of the 'variable' column of the df created by the following:
+
+url <- make_msf_url(cred, "2017-playoff", "20170612-CLE-GSW")
+dat <-  
+  query_msf_api(url, write=FALSE, flatten=TRUE)$gameplaybyplay$plays$play %>% 
+  mutate(play_id=paste0("q_",quarter,"_",time,"_play", seq_len(nrow(.)))) %>% 
+  melt(id.vars=c("quarter","time","play_id"), factorsAsStrings=TRUE) %>% 
+  mutate(variable=as.character(variable)) %>% 
+  filter(!is.na(value)) %>% 
+  arrange(play_id) %T>% write.csv("game_info.csv", row.names=FALSE)
+
+
+# the values of 'variable' can be uncollapsed by splitting on "."
+# there are 7 play types, each w structure listed below
+
+# we want to remove all redundant info -- 
+# mostly this comes in the form of player-level info.
+# where 
+# 			* in {shooting, assisting, blocking, drawnBy, penalized, 
+#							away, home, retrieving, incoming, outgoing, lostBy, stolenBy}, 
+# 
+# we have the following five attributes:
+
+*Player:
+	1. FirstName
+	2. ID
+	3. JerseyNumber
+	4. LastName
+	5. Position
+
+we can just toss all player-rows that aren't ID, and then use a lookup table 
+to swap out player id's for names if/when we want to do that.
+
+
+
+1. fieldGoalAttempt:
+	distanceFeet
+	outcome
+	Points
+	shotLocation:
+		x
+		y
+	shotType
+	teamAbbreviation
+	shootingPlayer, assistingPlayer, blockingPlayer:
+		FirstName
+		ID
+		JerseyNumber
+		LastName
+		Position
+
+
+2. foul:
+	drawnByPlayer, penalizedPlayer:
+		FirstName
+		ID
+		JerseyNumber
+		LastName
+		Position
+	foulLocation:
+		x
+		y
+	foulType
+	isFlagrant1
+	isFlagrant2
+	isPersonal
+	isTechnical
+	teamAbbreviation
+
+3. freeThrowAttempt:
+	attemptNum
+	outcome
+	shootingPlayer:
+		FirstName
+		ID
+		JerseyNumber
+		LastName
+		Position
+	teamAbbreviation
+	totalAttempts
+
+4. jumpBall:
+	awayPlayer, homePlayer:
+		FirstName
+		ID
+		JerseyNumber
+		LastName
+		Position
+	wonBy
+
+5. rebound:
+	offensiveOrDefensive
+	retrievingPlayer:
+		FirstName
+		ID
+		JerseyNumber
+		LastName
+		Position
+	teamAbbreviation
+
+6. substitution:
+	incomingPlayer, outgoingPlayer:
+		FirstName
+		ID
+		JerseyNumber
+		LastName
+		Position
+	teamAbbreviation
+
+7. turnover:
+	isStolen
+	lostByPlayer, stolenByPlayer:
+		FirstName
+		ID
+		JerseyNumber
+		LastName
+		Position
+	teamAbbreviation
+	turnoverType
+
