@@ -1,6 +1,16 @@
-### notes to self etc.
+### notes to self, links to revisit, etc.
 
 ##### linxe
+
+- [jupyter tute](https://www.datacamp.com/community/tutorials/tutorial-jupyter-notebook), including how to mix r/py inline (nice for e.g. interfacing pandas + ggplot2)
+
+- [jupyter notebooks](http://nbviewer.jupyter.org/github/nealcaren/workshop_2014/tree/master/notebooks/) for twitter/text mining workshop from a couple years ago (useful for hmc work -- inspect)
+
+- [gh repo](https://github.com/ptwobrussell/Mining-the-Social-Web-2nd-Edition) for mining the social web oreilly book
+
+- some [cool notebooks](https://github.com/jupyter/jupyter/wiki/A-gallery-of-interesting-Jupyter-Notebooks) to procrastinate by reading(*??)
+
+
 
 - [tensorflow playground](http://playground.tensorflow.org/)
 
@@ -38,6 +48,78 @@ python -c "with open('%textfile%', 'rw') as f: f.write(f.read().replace('%search
 6. ...
 
 
-##### donezo/meh
+<br><br><br><br><br><br>
 
--x- [unflexible + only linux rn] 4. cheque out reprozip/reprounzip examples ([here](https://github.com/ViDA-NYU/reprozip-examples/tree/master/django-blog) is an ex of a simple website w db connection)
+
+##### add to linxe listte
+
+[blah](https://cartesianfaith.com/2017/06/04/fermi-poker-gambling-for-quants-and-data-scientists/)
+[blah](https://github.com/zatonovo/lambda.r)
+[blah](http://blog.obeautifulcode.com/R/How-R-Searches-And-Finds-Stuff/)
+[blah](https://cran.r-project.org/doc/contrib/Leisch-CreatingPackages.pdf)
+[blah](http://courses.had.co.nz/11-devtools/)
+[blah](https://github.com/gastonstat/tutorial-R-noninteractive/blob/master/01-introduction.Rmd)
+[blah](http://had.co.nz/stat405/)
+
+[blah](https://www.quantopian.com/tutorials/getting-started)
+[blah](https://www.youtube.com/user/sentdex/videos?live_view=500&sort=dd&view=0&flow=grid)
+
+[blah](https://biologyforfun.wordpress.com/2015/02/26/generating-anova-like-table-from-glmm-using-parametric-bootstrap/)
+
+[useful lme4 notes](http://ase.tufts.edu/gsc/gradresources/guidetomixedmodelsinr/mixed%20model%20guide.html)
+
+[more lme4 notes](http://www.rensenieuwenhuis.nl/r-sessions-16-multilevel-model-specification-lme4/)
+
+[lme4 convergence warning troubleshooting](http://rpubs.com/bbolker/lme4trouble1)
+
+
+[mcmcglmm tutorial](https://github.com/tmalsburg/MCMCglmm-intro) (very nice -- revisit)
+
+another twitter/monkeylearn combo r post (similar to my btc one): http://www.masalmon.eu/2017/05/20/billnye/
+
+
+potentially super useful for debugging, code organization/reorganization, etc.
+
+https://cran.rstudio.com/web/packages/CodeDepends/vignettes/intro.html
+
+
+to install bioconductor paqqs, e.g.:
+  http://bioconductor.org/packages/release/bioc/html/Rgraphviz.html
+f = "../../../../projjies/sandboxxxe/boosh/permfunc.r"
+sc = readScript(f)
+g = makeVariableGraph( info = getInputs(sc))
+plot(g)
+
+makeCallGraph("package:lefftpack")
+gg = makeCallGraph("package:lefftpack")
+gg = layoutGraph(gg, layoutType = "circo")
+graph.par(list(nodes = list(fontsize=55)))
+renderGraph(gg) ## could also call plot directly
+plot(gg)
+
+
+bootstrapping regression coefficients example (shd rewrite the func):
+
+library('car')
+m1 <- lm(Fertility ~ ., swiss)
+betahat <- coef(m1)
+summary(m1)
+betahat.boot <- bootCase(m1, B=99) # 99 bootstrap samples--too small to be useful
+summary(betahat.boot)  # default summary
+cbind("Bootstrap SD"=apply(betahat.boot, 2, sd),
+      t(apply(betahat.boot, 2, function(x) quantile(x, c(.025, .975)))))
+
+
+- write an api for movie scrippse --> http://www.imsdb.com/scripts/Ex-Machina.html
+- sjmisc paqq, maybe send to stuieuie --> http://www.strengejacke.de/sjPlot/sjmisc/
+- incrementally visualize python execution line by line --> http://pythontutor.com/visualize.html#mode=display
+- job board --> https://www.r-users.com/
+- new monte carlo paqq --> https://firstdifferences.wordpress.com/2017/06/08/introducing-the-montecarlo-package/
+- marginal effects maybe actually useful --> https://www.r-bloggers.com/stata-like-marginal-effects-for-logit-and-probit-models-in-r/
+- double pipe logger --> 
+- extending logger pipe --> https://cran.r-project.org/web/packages/lumberjack/vignettes/extending.html
+- R6 classes --> https://cran.r-project.org/web/packages/R6/vignettes/Introduction.html
+- more on R6 classes --> https://cran.r-project.org/web/packages/R6/vignettes/Performance.html
+- ***simulating imputed values --> https://cran.r-project.org/web/packages/simputation/vignettes/intro.html
+
+
