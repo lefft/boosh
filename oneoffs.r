@@ -64,6 +64,7 @@ for (x in seq_along(sizes)){
 # always member u can directly call bash commands w, e.g.:
 system("touch build.r")
 system("git status")
+system("git log")
 
 # interesting garden path in documentation for sample()
 #   "# not that there is much chance of duplicates"
@@ -168,4 +169,74 @@ summary(boosh_fit)
 
 boosh_b1 <- beta1(x=boosh$x, y=boosh$y)
 boosh_b0 <- beta0(x=boosh$x, y=boosh$y)
+
+
+
+###### STOCK MODELING STUFF ######
+
+# url: https://www.youtube.com/watch?v=ftMq5ps503w
+
+#### MINMAX SCALING
+
+library("magrittr")
+
+# minmax scaling (results in [0,1] scale):
+# scaled(x) = (x - min(x)) / (max(x) - min(x))
+mm_scale <- function(x){
+  (x - min(x)) / (max(x) - min(x))
+}
+
+
+link <- "http://lefft.xyz/r_minicourse/datasets/top5k-word-frequency-dot-info.csv"
+
+boosh <- read.csv(link, stringsAsFactors=FALSE)
+
+boosh$Rank_mms <- mm_scale(boosh$Rank)
+
+boosh$Rank_mms %>% mean
+boosh$Rank %>% mean
+
+plot(boosh$Frequency, boosh$Rank)
+plot(boosh$Frequency, boosh$Rank_mms)
+plot(boosh$Rank, boosh$Rank_mms)
+
+#### TIME SERIES NORMALIZATION
+
+# to "normalize"(?) time-series of e.g. prices: 
+#   norm(p_i) = (p_i / p_i-1) - 1
+# "on day i, norm(p_i) is the proportion change relative to day i-1"
+# 
+# to de-normalize, can use:
+#   p_i = p_i-1 * (norm(p_i) + 1)
+# denormalizing is for once you have a model, to derive a prediction
+
+norm_ts <- function(p_0, p_i){
+  (p_i / p_0) - 1
+}
+
+denorm_ts <- function(p_0, p_i){
+  p_0 * (norm_ts(p_0, p_i) + 1)
+}
+
+norm_ts(20, 10); denorm_ts(20, 10)
+norm_ts(200, 10); denorm_ts(200, 10)
+norm_ts(20, 100); denorm_ts(20, 100)
+
+norm_ts(1:5, 5:1)
+denorm_ts(1:5, 5:1)
+
+
+### R TO Z TRANSFORMS (INCL D)
+library("psych")
+(cors <- seq(-.9,.9,.1))
+(zs <- fisherz(cors)); (rs <- fisherz2r(zs)); round(zs,2)
+n <- 30; r <- seq(0,.9,.1)
+rc <- matrix(r.con(r,n),ncol=2)
+t <- r*sqrt(n-2)/sqrt(1-r^2); p <- (1-pt(t,n-2))/2
+r.rc <- data.frame(r=r,z=fisherz(r),lower=rc[,1],upper=rc[,2],t=t,p=p)
+round(r.rc,2); plot(r.rc$r, r.rc$z); plot(r.rc$t, r.rc$p)
+
+
+
+### SMOOTHING A SCATTERPLOT
 

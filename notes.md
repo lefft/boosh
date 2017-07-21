@@ -2,6 +2,22 @@
 
 ##### linxe
 
+- [stan examples](https://github.com/stan-dev/example-models/tree/master/Bayesian_Cognitive_Modeling) for bayesian models in cog sci -- very nice exx
+
+- [faq on glmm](https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html) (useful for reference)
+
+- [cryptocurrency exploration in r](http://www.r-chart.com/2017/07/investigating-cryptocurrencies-using-r.html)
+
+- [setting up rstudio on aws ec2](https://www.youtube.com/watch?v=rkDwPQuqP0g) (current of june 2017)
+
+- yayyy, [ggjoy!!!](https://cran.r-project.org/web/packages/ggjoy/vignettes/introduction.html)
+
+- [bayesian parameter estimation](https://www.youtube.com/watch?v=2_eFIyrOdJc) (and short [follow-up](https://youtu.be/a402ek-8oco) about the math of normalizing)
+
+- stock prediction challenge [video](https://www.youtube.com/watch?v=ftMq5ps503w&feature=youtu.be) and accompanying [code](https://github.com/llSourcell/How-to-Predict-Stock-Prices-Easily-Demo) and a couple nice responses [here](https://github.com/ciurana2016/predict_stock_py) and [here](https://github.com/Avhirup/Stock-Market-Prediction-Challenge); see also [this post](http://machinelearningmastery.com/time-series-prediction-with-deep-learning-in-python-with-keras/)
+
+- [game of life sim](https://www.youtube.com/watch?v=bNsrHRJQdKo) (quick)
+
 - [jupyter tute](https://www.datacamp.com/community/tutorials/tutorial-jupyter-notebook), including how to mix r/py inline (nice for e.g. interfacing pandas + ggplot2)
 
 - [jupyter notebooks](http://nbviewer.jupyter.org/github/nealcaren/workshop_2014/tree/master/notebooks/) for twitter/text mining workshop from a couple years ago (useful for hmc work -- inspect)
@@ -10,7 +26,7 @@
 
 - some [cool notebooks](https://github.com/jupyter/jupyter/wiki/A-gallery-of-interesting-Jupyter-Notebooks) to procrastinate by reading(*??)
 
-
+- a little book of R for bayesian statistics [book](http://a-little-book-of-r-for-bayesian-statistics.readthedocs.io/en/latest/) seems to be in-progress (v nice so far!)
 
 - [tensorflow playground](http://playground.tensorflow.org/)
 
@@ -85,6 +101,8 @@ https://cran.rstudio.com/web/packages/CodeDepends/vignettes/intro.html
 
 to install bioconductor paqqs, e.g.:
   http://bioconductor.org/packages/release/bioc/html/Rgraphviz.html
+
+```
 f = "../../../../projjies/sandboxxxe/boosh/permfunc.r"
 sc = readScript(f)
 g = makeVariableGraph( info = getInputs(sc))
@@ -96,10 +114,11 @@ gg = layoutGraph(gg, layoutType = "circo")
 graph.par(list(nodes = list(fontsize=55)))
 renderGraph(gg) ## could also call plot directly
 plot(gg)
-
+```
 
 bootstrapping regression coefficients example (shd rewrite the func):
 
+```
 library('car')
 m1 <- lm(Fertility ~ ., swiss)
 betahat <- coef(m1)
@@ -108,6 +127,7 @@ betahat.boot <- bootCase(m1, B=99) # 99 bootstrap samples--too small to be usefu
 summary(betahat.boot)  # default summary
 cbind("Bootstrap SD"=apply(betahat.boot, 2, sd),
       t(apply(betahat.boot, 2, function(x) quantile(x, c(.025, .975)))))
+```
 
 
 - write an api for movie scrippse --> http://www.imsdb.com/scripts/Ex-Machina.html
