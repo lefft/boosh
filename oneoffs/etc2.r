@@ -47,3 +47,71 @@ s
 strat_middle(it <- list(options=1:5, correct=2))
 
 # hist(unlist(lapply(1:100, function(x) sample(options, size=1, prob=c(.125,.125,.5,.125,.125)))))
+
+
+
+
+
+## fiddle on using fp for diff defn's of a single stat
+
+# effect size calc from [here](https://www.uccs.edu/~lbecker/) says: 
+#   - d(x,y) = -4.242458132652462
+#   - r(x,y) = -.904
+
+# sqrt mean sq err
+# d1fix <- function(x,y){
+#   d <- (mean(x) - mean(y)) / sd(((x-mean(x)^2)/length(x)) + ((y-mean(y)^2)/length(y)))
+#   return(d)
+# }
+# cor(x,y)
+# mean(x) - mean(y) / sd(c(x,y))
+
+# r <- function(d){d / sqrt(d^2 + 4)}
+# iris$Sepal.Width, iris$Sepal.Length
+
+
+# top of dome guess/intuition [wrong!]
+d1 <- function(x,y){
+  d <- (mean(x) - mean(y)) / sd(c(x,y))
+  return(d)
+}
+# from think stats book
+d2 <- function(x,y){
+  diff <- mean(x) - mean(y)
+  varx <- var(x)
+  vary <- var(y)
+  nx <- length(x)
+  ny <- length(y)
+  pooled_var <- (nx*varx + ny*vary) / (nx+ny)
+  d <- diff / sqrt(pooled_var)
+  return(d)
+}
+# from rando internets thingie
+d3 <- function(x,y){
+  (mean(x) - mean(y)) / sqrt((sd(x)^2 + sd(y)^2) / 2)
+}
+
+# corr faqqtory (givvit a d + good to go)
+r <- function(f){function(x,y){f(x,y) / sqrt(f(x,y)^2 + 4)}}
+
+# fonc list
+phonxe <- list(
+  d1=d1, d2=d2, d3=d3, 
+  rd1=r(d1), rd2=r(d2), rd3=r(d3)
+)
+
+# for quicker ref
+x <- iris$Sepal.Width; y <- iris$Sepal.Length
+
+# lookit the means + sd's etc
+c(`PW mean (x)` = mean(x), `PL mean (y)` = mean(y), `total mean` = mean(c(x,y)), 
+  `PW sd (x)`   = sd(x),   `PL sd (y)`   = sd(y),   `total sd`   = sd(c(x,y)))
+
+# apply each phonqe pointwise to the vexxxe
+sapply(phonxe, function(f) f(x,y))
+
+# plot it w nice lab names
+plot(sep_width <- x, sep_length <- y); rm(sep_width); rm(sep_length)
+
+
+

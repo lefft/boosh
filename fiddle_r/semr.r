@@ -30,12 +30,12 @@ not    <- function(p)             !p
 and    <- function(q) function(p)  p & q
 or     <- function(q) function(p)  p | q
 ifthen <- function(q) function(p) !p | q
-# determiner meanings
+# determiner meanings [this is kinda bastardized]
 every <- make_det(condition=all)
 a     <- make_det(condition=any)
 two   <- make_det(condition=function(x)sum(x)>1)
 the <- function(P){
-  if (length(P)!=1){return("presupfail!")}
+  if (length(P)!=1){return(NULL); message("psfail!")}
   return(paste0("the_", P))
 }
 # 
@@ -74,19 +74,37 @@ GAVE <- c(jfm=c("john","felix","mary"),msj=c("mary","sparky","john"))
 #
 # should be true that 'every dog chased a cat' on one reading; not on other
 every(DOG)(BARKED)
+for (x in DOG){print(c(x, barked(x)))}
 
-for (x in DOG){print(barked(x))}
-
+every(CAT)(BARKED)
+sapply(CAT, function(x) print(c(x, barked(x))))
 
 # missing vectorization in some lexical entry :/ 
-#   every(DOG)(function(x){chased("felix")(x)})
-every(DOG)(THING)
+# 
+# no --> Q arg to every needs to be a vector not a func like P?
+Vectorize((function(x){chased("felix")(x)}))(DOG)
+# want to make things work so that this means what it should
+Vectorize((function(x){chased(DOG)(x)}))("felix")
+
+every(DOG)(Vectorize(function(x){chased("felix")(x)})(DOG))
+# every(DOG)((function(x)Vectorize(chased)(x)("felix"))(DOG))
+
+every(DOG)(THING) # so it can be every(vec)(vec)
+every(THING)(DOG) 
+
+
+chased("fido")("felix")
+chased("spot")("felix")
+chased("sparky")("felix")
+
+
 
 for (x in DOG){print(barked(x))}
 
 
 # order of args wrong! x shd be direct obj!
 for (x in DOG){print(chased(x)("felix"))}
+
 
 ### 2. basic model theory #####################################################
 # === === === === === === === === === === === === === === === === === === 

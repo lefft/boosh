@@ -1,4 +1,11 @@
+# new todo nummze
 
+# start=1;stop=10
+make_todo_numze <- function(start, stop){
+  paste(noquote(paste0(seq(from=start, to=stop, by=1), ".")), collapse=" ")
+}
+
+make_todo_numze(641, 650)
 ### small notes to salf ###########################
 # === === === === === === 
 

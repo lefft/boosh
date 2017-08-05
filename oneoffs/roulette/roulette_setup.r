@@ -18,15 +18,51 @@ wheel <- data.frame(
             "green", rep(c("red","black"), times=9))     # spaces 20-38
 )
 
-## the table --------------------------
-table <- ""
+colors_lkup <- setNames(wheel$color, nm=wheel$number)
+## the board --------------------------
+board <- data.frame(
+  label = c(
+    # c("0", "00", as.character(seq(len=36)))
+    # sprintf("%02d", seq(len=36))
+    as.character(seq(len=36))
+  ), 
+  dozen = cut(
+    seq(len=36), 
+    breaks=seq(from=0, to=36, by=12), 
+    labels=c("1st", "2nd", "3rd"), 
+    include.lowest=TRUE
+  ), 
+  half = ifelse(seq(len=36) < 19, "lower", "upper"), 
+  even_odd = ifelse(seq(len=36) %% 2 == 0, "even", "odd"), 
+  color = colors_lkup[as.character(seq(len=36))]#,
+  # column_index = ...
+  # street_index = ...
+)
+
+
 
 
 ### game actions --------------------------------------------------------------
 
+# spin the wheel
+spin_wheel <- function(board=board, wheel=wheel){
+  board <- board
+  wheel <- wheel
+  # choose a random index on the wheel
+  ball_stops_on <- sample(wheel$wheel_index, size=1)
+  # the number it stopped on
+  winning_number <- wheel$number[wheel$wheel_index==ball_stops_on]
+  # and its color
+  winning_color <- wheel$color[wheel$wheel_index==ball_stops_on]
+  # print out a message about the winner + it's color
+  message(paste0("winning number: ", winning_number, "\n", 
+                 "winning color:  ", winning_color))
+  return(winning_number)
+}
 
+# exception:   promise already under evaluation: recursive default argument reference or earlier problems?
 
-
+spin_wheel()
 
 
 ### external sources of info about the game -----------------------------------

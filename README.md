@@ -13,11 +13,6 @@ this repo is a sandbox for fiddling around, sketching out ideas, learning/practi
 > `arithmetic_from_scratch/` 
 	answering the question: "how does/can a calculator 'work'," in the sense i've always had in mind. rules are: just base functions; no arithmetic operators; we're allowed to use `identical()` for equality but only container-related stuff otherwise(?); (shd we allow calls to `length()`?!)
 
-<br>
-
-
-> `fdr_simulation/`
-	copy of chemla blog post on flexible outlier exclusion criteria in RT studies, discuss whether this is a real problem. ultimately will apply this strategy to cases w messy data, unbalanced designs, etc. (note that there's a jupyter nb in `fiddle_py/haus_price/` w a lil sim abt fdr + multiple comparisons -- related) 
 
 <br>
 
