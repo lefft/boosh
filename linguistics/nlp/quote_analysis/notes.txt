@@ -1,0 +1,67 @@
+
+database of quotes, at 
+  https://www.quotedb.com
+
+example quote url: 
+  https://www.quotedb.com/quotes/4085
+
+a few fields that should have the quote text, e.g.: 
+  <title>Ignorance is preferable to error...</title>
+  <meta name="Keywords" content="Ignorance is preferable to error...">
+  <meta name="Description" content="Ignorance is preferable to error...">
+
+there is also a field w a rating: 
+  alt="3.55 avg (11 votes)"
+
+there is also a field w "category" (https://www.quotedb.com/categories): 
+  Listed in: <a href="/categories/miscellaneous"...
+
+
+want to scrape the quotes and get them into a df
+
+strategy: 
+  - determine which url's are valid, and create a shell df w url column
+  - fill the author, year, and text fields of the df with info from the page
+  - done
+
+implementation: 
+  - scrape:
+      >> try every four-digit num as a url (hope we dont get rate limited! :o)
+      >> for valid ones, download the page into a local folder
+  
+  - construct dataset: 
+      >> now read in each page from local folder
+      >> extract quote from <title> tag
+      >> strip off author and year
+      >> put author and year into their respective cells
+      >> put text into its respective cell
+
+  - analyze data: 
+      >> basic summary stats
+      >> author distribution
+      >> year distribution
+      >> mlu/nchar analysis
+      >> rating analysis
+      >> tf-idf, by decade and author etc.
+      >> ...
+
+  - write up results, put on website, <333 !
+
+
+
+
+
+
+
+
+full fail msg:
+
+paste0(
+"Invalid query: SELECT catid, catname, alias FROM quote_cats WHERE ", 
+"catid IN() ORDER BY catname ASC"
+)
+
+
+
+
+

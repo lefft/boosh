@@ -1,0 +1,12 @@
+compare: 
+	- integrate both elon musk planze
+	x- unabomber manifesto
+	x- google diversity memo
+	x- sam hinkie letter
+	x- another "open letter" or two
+
+pairs of words adj-noun s.t. both words are frequent and frequent in adj-noun construction, and occur w lots of diff partners in the construction, but don't occur w each other
+
+
+
+http://www.martinschweinberger.de/blog/syntactic-parsing-in-r/

@@ -2,6 +2,11 @@
 
 ##### linxe
 
+
+- [trading/finance tute](https://www.datacamp.com/community/tutorials/finance-python-trading) w python
+
+- kyle rawlins [lambda notebooks](https://github.com/rawlins/lambda-notebook) system for writing fragments in a semantics-y feeling python extension (good for comparison against my efforts in r -- prob shd swap notes!)
+
 - [stan examples](https://github.com/stan-dev/example-models/tree/master/Bayesian_Cognitive_Modeling) for bayesian models in cog sci -- very nice exx
 
 - [faq on glmm](https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html) (useful for reference)

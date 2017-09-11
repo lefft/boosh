@@ -1,0 +1,3 @@
+np  d  n
+s  np  vp
+vp  v  np

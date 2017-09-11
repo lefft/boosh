@@ -1,0 +1,349 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>UMass Amherst Linguistics Sentiment Corpora</title>
+	 
+	<style type="text/css">
+	body {
+		font-family: verdana, "Lucida Grande", arial, helvetica, sans-serif;
+		font-size: medium;
+		width:800px;
+		/* margin-left: auto;
+	  margin-right: auto;
+		border: 1px solid black; */
+	}
+	h1, h2, h3 {
+		font-weight: bold;
+		padding:0px;
+		margin:10px;
+		padding-top: 20px;   	
+	}
+	h1 { font-size: 150%; }
+	h2 { font-size: 120%; }
+	h3 { font-size: 110%; }
+	
+	p {
+		padding:0px;
+		margin-left:10px;
+	}
+	
+	ul.nav {
+		padding: 0;
+		margin: 20px 0 20px 10px;
+	}
+	
+	ul.nav li {
+		display: inline;
+		padding: 0px;
+		margin: 0px;
+	}
+	ul.nav a {
+		color: #881c1c;
+		font-weight: bold;
+		padding: 5px;
+		margin: 5px;
+	}
+	
+	p.bibitem {
+		text-indent: -20px;
+		padding-left: 20px; 	
+	}
+	
+	#author {
+		font-weight: bold;
+		padding:0px;
+		margin:10px;
+		font-size: 110%;		
+	}
+
+	a:link, a:visited {
+		color: #777777;
+		text-decoration: none;
+	}
+	a:hover {
+		color: #FFFFFF;
+		text-decoration: none;
+		background: #777777;	
+	}    
+
+	#license {
+		clear: both;
+		display: block;
+		font-size: 80%;
+		vertical-align: middle;
+		width: 100%;
+		margin-left: auto;
+	  margin-right: auto;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		border-top: 1px solid #000000;
+	}
+	#license img {
+		float: left;
+		margin:5px 5px 5px 0;
+		margin-right:5px
+	}
+	#license p {
+		float: left;
+		margin:0px;
+		padding: 0px;
+		width: 520px;
+	}
+
+	table.counts { 
+		margin-left: auto;
+	  margin-right: auto;
+	}
+	table.counts th {
+		padding-top: 10px;			
+	}
+	table.counts td {		
+		text-align: center;
+		border: 1px solid black;		
+	}	
+	table.counts td.rowLabel {
+		text-align: right;
+	}	
+  table.counts td.star {
+		font-style: italic;
+		border: 0px solid black;		
+	}			
+	</style>
+	
+</head>
+
+<body>
+
+<h1>UMass Amherst Linguistics Sentiment Corpora</h1>
+
+<p id="author"><a href='http://people.umass.edu/nconstan/'>Noah Constant</a>, 
+	<a href='http://people.umass.edu/cmdavis/'>Christopher Davis</a>, 
+	<a href='http://people.umass.edu/potts/'>Christopher Potts</a>, and 
+	<a href='http://florianschwarz.net/'>Florian Schwarz</a></p>
+
+
+<ul class='nav'>
+	<li><em>Navigate</em>:</li>
+	<li><a href='#format'>Format</a></li><li><a href='#details'>Corpora details</a></li>
+  <li><a href='#citation'>Citation</a></li>
+  <li><a href='#acknowledgements'>Acknowledgements</a></li>
+</ul>
+
+<p>The UMass Amherst Linguistics Sentiment Corpora consist of <em>n</em>-gram counts extracted from over 700,000 online product reviews in Chinese, English, German, and Japanese. The files are UTF-8 encoded text. They are formatted to be read in as <a href="http://www.r-project.org/">R</a> data frames, but they can easily be manipulated with other tools.  We are releasing them under a <a href='#license'>Creative Commons Share Alike license</a>. Read on to find out more about their size and composition.</p>
+
+<h2><a name='format'>Format</a></h2>
+<p>All the corpus files have the form of the following snippet:</p>
+<pre>
+	         Token Rating TokenCount RatingWideCount
+	1000     break      5         18          114305
+	1001 breakfast      1          4           14794
+	1002 breakfast      2         14           20908
+	1003 breakfast      3         26           26266
+	1004 breakfast      4         66           80597
+	1005 breakfast      5         42          114305
+	1006    bright      1          0           14794
+	1007    bright      2          0           20908
+	1008    bright      3          0           26266
+	1009    bright      4         10           80597
+	1010    bright      5          1          114305
+</pre>
+<ul>
+  <li><strong>Leftmost column</strong>: The row number.</li>
+  <li><strong>Token column</strong>: The token under consideration. For Chinese, the tokens are character sequences: unigram, bigram, and trigram. For the other corpora, the tokens are words or bigrams of words. Each token appears exactly five times: once for each rating category.</li>
+  <li><strong>Rating</strong>: The star-rating. All the texts in all the corpora are marked with a star rating, 1 through 5 stars (1: lowest; 5: highest).</li>
+  <li><strong>Token Count</strong>: The number of times the <em>n</em>-gram appeared in reviews with that row's star rating.</li>
+  <li><strong>RatingWideCount</strong>: The total number of <em>n</em>-grams in texts in that rating category.</li>
+</ul>
+
+<p>Thus, with this format, it is easy to get, for example, the frequency of a word <em>W</em> appearing in a particular rating category <em>R</em>: divide TokenCount of <em>W</em> for <em>R</em> by the RatingWideCount for <em>R</em>.</p>
+<p>In order to keep the corpus files to a manageable size, and to avoid making conclusions based on too few data points, we removed <em>n</em>-grams that had too few tokens, according to the following thresholds:</p>
+
+<table class='counts'>
+	<tr><th colspan='3'>Threshold token counts</th></tr>
+	<tr><th>&nbsp;</th><th>review</th><th>summary</th></tr>
+	<tr><td class='rowLabel'>English Amazon</td><td>100</td><td>10</td></tr>
+  <tr><td class='rowLabel'>English Tripadvisor</td><td>100</td><td>10</td></tr>
+	<tr><td class='rowLabel'>German Amazon</td><td>50</td><td>10</td></tr>
+	<tr><td class='rowLabel'>Japanese Amazon</td><td>50</td><td>10</td></tr>
+	<tr><td class='rowLabel'>Chinese MyPrice</td><td>20</td><td>&ndash;</td></tr>
+	<tr><td class='rowLabel'>Chinese Amazon</td><td>50</td><td>10</td></tr>
+</table>
+
+<p>The numbers for Chinese are character counts. The others are word counts.</p>
+
+
+
+<h2><a name='details'>Corpora details</a></h2>
+
+<p>The Japanese tokenization was done using <a href="http://mecab.sourceforge.net/">MeCab</a>. The Chinese tokenization procedure just inserted spaces between all characters. English and German tokenization was done as follows:</p>
+
+<ul>
+  <li>Upper/lower case distinctions were removed.</li>
+  <li>HTML tags and character entities were removed.</li>
+  <li>Question marks and exclamation points were treated as separate words. Other punctuation was removed.</li>
+</ul>
+
+<ul class='nav'>
+<li><em>Navigate</em>:</li>
+<li><a href='#chinese'>Chinese</a></li>
+<li><a href='#english'>English</a></li>
+<li><a href='#german'>German</a></li>
+<li><a href='#japanese'>Japanese</a></li>
+</ul>
+
+
+<h3><a name='chinese'></a>Chinese Amazon</h3>
+
+<p>Reviews of a wide variety of products. This corpus is large enough that we have included files for unigrams, bigrams, and trigrams. 203,554 authors. Median number of reviews per author: 1.</p>
+
+<table class='counts'>
+
+  <tr><th colspan='7'>Review</th></tr>
+  <tr><td class='star'></td><td class='star'>1 star</td><td class='star'>2 star</td><td class='star'>3 star</td><td class='star'>4 star</td><td class='star'>5 star</td><td class='star'>total</td></tr>
+  <tr><td class='rowLabel'>reviews</td><td>29,642</td>
+  <td>32,602</td>
+  <td>100,272</td>
+  <td>160,817</td>
+  <td>204,461</td>
+  <td>527,794</td>
+  </tr>
+  <tr><td class='rowLabel'>characters</td><td>4,625,180</td>
+  <td>4,242,812</td>
+  <td>11,649,647</td>
+  <td>19,125,499</td>
+  <td>29,729,569</td>
+  <td>69,372,707</td>
+  </tr>
+
+  <tr><th colspan='7'>Summary</th></tr>
+  <tr><td class='star'></td><td class='star'>1 star</td><td class='star'>2 star</td><td class='star'>3 star</td><td class='star'>4 star</td><td class='star'>5 star</td><td class='star'>total</td></tr>
+  <tr><td class='rowLabel'>reviews</td><td>29,669</td>
+  <td>32,642</td>
+  <td>100,437</td>
+  <td>161,050</td>
+  <td>204,670</td>
+  <td>528,468</td>
+  </tr>
+  <tr><td class='rowLabel'>characters</td><td>611,769</td>
+  <td>606,104</td>
+  <td>1,775,852</td>
+  <td>2,613,873</td>
+  <td>3,626,706</td>
+  <td>9,234,304</td>
+  </tr>
+</table>
+
+
+<h3>Chinese MyPrice</h3>
+
+<p>Electronics reviews. The number of authors is not known. The ratings are an average of a number of a few different five-star rating categories ('value for the price', 'service and support', 'quality and reliability', 'features'), not all of which appear consistently 
+with all reviews, probably due to a site update at some point. To calculate the overall rating of a review, we average all the scores which were entered for that review, rounding to the nearest integer (reviews without any ratings were ignored).</p>
+
+<table class='counts'>  
+  <tr><th colspan='7'>Chinese MyPrice.com.cn</th></tr>
+  <tr><td class='star'></td><td class='star'>1 star</td><td class='star'>2 star</td><td class='star'>3 star</td><td class='star'>4 star</td><td class='star'>5 star</td><td class='star'>total</td></tr>
+  <tr><td class='rowLabel'>reviews</td><td>2,115</td><td>3,042</td><td>8,007</td><td>2,055</td><td>2,294</td><td>17,513</td></tr>
+  <tr><td class='rowLabel'>characters</td><td>73,798</td><td>111,659</td><td>236,184</td><td>65,264</td>
+  <td>56,847</td><td>543,752</td></tr>
+</table>
+
+
+<h3><a name='english'></a>English Amazon</h3>
+
+<p>Book reviews. 40,625 authors. Median number of reviews per author: 1.</p>
+
+<table class='counts'> 
+  <tr><th colspan='7'>Summary</th></tr>
+  <tr><td class='star'></td><td class='star'>1 star</td><td class='star'>2 star</td><td class='star'>3 star</td><td class='star'>4 star</td><td class='star'>5 star</td><td class='star'>total</td></tr> 
+ <tr><td class='rowLabel'>reviews</td><td>3,322</td><td>2,684</td><td>3,993</td><td>8,598</td><td>34,946</td><td>53,543</td></tr>
+ <tr><td class='rowLabel'>words</td><td>16,830</td><td>13,518</td><td>20,779</td><td>43,607</td><td>182,377</td><td>277,111</td></tr>
+ <tr><td class='rowLabel'>vocab</td><td>3,434</td><td>3,019</td><td>3,785</td><td>6,025</td><td>11,482</td><td>15,930</td></tr>
+
+  <tr><th colspan='7'>Review</th></tr>
+  <tr><td class='star'></td><td class='star'>1 star</td><td class='star'>2 star</td><td class='star'>3 star</td><td class='star'>4 star</td><td class='star'>5 star</td><td class='star'>total</td></tr> 
+  <tr><td class='rowLabel'>reviews</td><td>3,323</td><td>2,687</td><td>3,994</td><td>8601</td><td>34,952</td><td>53,557</td></tr>
+  <tr><td class='rowLabel'>words</td><td>570,687</td><td>512,643</td><td>767,958</td><td>1,513,776</td><td>4,769,921</td><td>8,134,985</td></tr>
+  <tr><td class='rowLabel'>vocab</td><td>27,352</td><td>26,239</td><td>32,818</td><td>46,306</td><td>80,569</td><td>112,323</td></tr>
+</table>
+
+
+<h3>English Tripadvisor.com</h3>
+
+<p>Hotel reviews for hotels in American cities. 35,713 authors. Median number of reviews per author: 1.</p>
+
+<table class='counts'> 
+  <tr><th colspan='7'>Summary</th></tr>
+  <tr><td class='star'></td><td class='star'>1 star</td><td class='star'>2 star</td><td class='star'>3 star</td><td class='star'>4 star</td><td class='star'>5 star</td><td class='star'>total</td></tr>
+  <tr><td class='rowLabel'>reviews</td><td>2,989</td><td>4,300</td><td>5,410</td><td>17,950</td><td>25,200</td><td>55,849</td></tr>
+  <tr><td class='rowLabel'>words</td><td>14,794</td><td>20,908</td><td>26,266</td><td>80,597</td><td>114,305</td><td>256,870</td></tr>
+  <tr><td class='rowLabel'>vocab</td><td>2,417</td><td>3,052</td><td>3,134</td><td>5,272</td><td>5,651</td><td>10,819</td></tr>
+ 
+  <tr><th colspan='7'>Review</th></tr>
+  <tr><td class='star'></td><td class='star'>1 star</td><td class='star'>2 star</td><td class='star'>3 star</td><td class='star'>4 star</td><td class='star'>5 star</td><td class='star'>total</td></tr>
+  <tr><td class='rowLabel'>reviews</td><td>2,896</td><td>4,130</td><td>4,948</td><td>15,801</td><td>22,450</td><td>50,225</td></tr>
+  <tr><td class='rowLabel'>words</td><td>605,207</td><td>877,854</td><td>974,271</td><td>2,726,796</td><td>3,577,764</td><td>8,761,892</td></tr>
+  <tr><td class='rowLabel'>vocab</td><td>19,128</td><td>23,534</td><td>24,761</td><td>42,776</td><td>49,492</td><td>85,425</td></tr>
+</table>
+
+
+<h3><a name='german'></a>German Amazon</h3>
+
+<p>Book, music, movie, and electronics reviews. 16,623 authors. Median number of reviews per author: 1.</p>
+
+<table class='counts'>
+	<tr><th colspan='7'>Summary</th></tr>
+	<tr><td class='star'></td><td class='star'>1 star</td><td class='star'>2 star</td><td class='star'>3 star</td><td class='star'>4 star</td><td class='star'>5 star</td><td class='star'>total</td></tr>
+	<tr><td class='rowLabel'>reviews</td><td>2,984</td><td>1,880</td><td>2,646</td><td>4,427</td><td>15,774</td><td>27,711</td></tr>
+	<tr><td class='rowLabel'>words</td><td>12,756</td><td>8,135</td><td>12,080</td><td>20,841</td><td>73,890</td><td>127,702</td></tr>
+	<tr><td class='rowLabel'>vocab</td><td>3,024</td><td>2,378</td><td>3,038</td><td>4,806</td><td>9624</td><td>14,975</td></tr>
+
+  <tr><th colspan='7'>Review</th></tr>
+  <tr><td class='star'></td><td class='star'>1 star</td><td class='star'>2 star</td><td class='star'>3 star</td><td class='star'>4 star</td><td class='star'>5 star</td><td class='star'>total</td></tr> 
+  <tr><td class='rowLabel'>reviews</td><td>2,987</td><td>1,881</td><td>2,647</td><td>4,431</td><td>15,784</td><td>27,730</td></tr>
+  <tr><td class='rowLabel'>words</td><td>407,888</td><td>319,341</td><td>467,556</td><td>788,915</td><td>2,205,666</td><td>4,189,366</td></tr>
+  <tr><td class='rowLabel'>vocab</td><td>35,177</td><td>30,835</td><td>37,644</td><td>53,539</td><td>95,453</td><td>144,418</td></tr>
+</table>  
+
+
+<h3><a name='japanese'></a>Japanese Amazon</h3>
+
+<p>Book, music, movie, and electronics reviews. 12,747 authors. Median number of reviews per author: 1.  The morphological analysis was done using  <a href="http://mecab.sourceforge.net/">MeCab</a>. MeCab decomposes the agglutinative verbal morphology, so the word counts are somewhat inflated.</p>
+
+<table class='counts'>  
+  <tr><th colspan='7'>Summary</th></tr>
+  <tr><td class='star'></td><td class='star'>1 star</td><td class='star'>2 star</td><td class='star'>3 star</td><td class='star'>4 star</td><td class='star'>5 star</td><td class='star'>total</td></tr>
+  <tr><td class='rowLabel'>reviews</td><td>971</td><td>759</td><td>1609</td><td>3,504</td><td>11,031</td><td>17,874</td></tr>
+	<tr><td class='rowLabel'>words</td><td>5,579</td><td>4,733</td><td>10,589</td><td>23,363</td><td>72,635</td><td>116,899</td></tr>
+	<tr><td class='rowLabel'>vocab</td><td>1,525</td><td>1,489</td><td>2,580</td><td>4,601</td><td>8,531</td><td>11,223</td></tr>
+
+  <tr><th colspan='7'>Review</th></tr>
+  <tr><td class='star'></td><td class='star'>1 star</td><td class='star'>2 star</td><td class='star'>3 star</td><td class='star'>4 star</td><td class='star'>5 star</td><td class='star'>total</td></tr>
+  <tr><td class='rowLabel'>reviews</td><td>971</td><td>759</td><td>1,609</td><td>3,504</td><td>11,031</td><td>17,874</td></tr>
+  <tr><td class='rowLabel'>words</td><td>127,049</td><td>123,312</td><td>277,857</td><td>636,067</td><td>1,805,764</td><td>2,970,049</td></tr>
+  <tr><td class='rowLabel'>vocab</td><td>9,574</td><td>9,909</td><td>16,247</td><td>24,902</td><td>39,948</td><td>49,054</td></tr>
+</table>
+
+
+<h2><a name='citation'>Citation</a></h2>
+
+<p class='bibitem'>Constant, Noah, Christopher Davis, Christopher Potts, and Florian Schwarz. 2008. <a href="http://people.umass.edu/potts/manuscripts/constant-davis-potts-schwarz-expressives.pdf">The pragmatics of expressive content: Evidence from large corpora</a>.  To appear in <em>Sprache und Datenverarbeitung</em>.</p>
+      
+<p class='bibitem'>Potts, Christopher and Florian Schwarz. 2008. <a href="http://people.umass.edu/potts/manuscripts/potts-schwarz-exclamatives08.pdf">Exclamatives and heightened emotion: Extracting pragmatic generalizations from large corpora</a>. Ms., UMass Amherst.</p>
+
+<h2><a name='acknowledgements'>Acknowledgements</a></h2>
+ 
+<p>This material is based upon work supported by the National Science Foundation under Grant No. BCS-0642752. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</p>
+
+
+<div id="license"><a name='license'></a>
+	<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a>
+	<p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 License</a>.
+	Last update: 2009-01-03</p>
+</div>
+
+</body>
+</html>

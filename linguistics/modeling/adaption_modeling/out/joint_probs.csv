@@ -1,0 +1,13 @@
+"v","s","t","lhs","rhs","condition","v_freq","s_freq","t_freq","token_prob","rt_weight"
+"verb1","sent_comp",TRUE,0.0547,0.06,"v1_sc_that",0.4754,0.4,0.3,0.057,0.9536
+"verb1","sent_comp",FALSE,0.1313,0.125,"v1_sc_xthat",0.4754,0.4,0.7,0.1331,0.8451
+"verb1","dir_obj",TRUE,0.0761,0.062,"v1_do_that",0.4754,0.6,0.3,0.0856,0.8759
+"verb1","dir_obj",FALSE,0.1828,0.198,"v1_do_xthat",0.4754,0.6,0.7,0.1997,0.7991
+"verb2","sent_comp",TRUE,0.0445,0.048,"v2_sc_that",0.3477,0.4,0.3,0.0417,0.9791
+"verb2","sent_comp",FALSE,0.1068,0.109,"v2_sc_xthat",0.3477,0.4,0.7,0.0974,0.9271
+"verb2","dir_obj",TRUE,0.0619,0.068,"v2_do_that",0.3477,0.6,0.3,0.0626,0.9603
+"verb2","dir_obj",FALSE,0.1487,0.137,"v2_do_xthat",0.3477,0.6,0.7,0.146,0.849
+"verb3","sent_comp",TRUE,0.0237,0.021,"v3_sc_that",0.1769,0.4,0.3,0.0212,0.9788
+"verb3","sent_comp",FALSE,0.057,0.055,"v3_sc_xthat",0.1769,0.4,0.7,0.0495,0.9746
+"verb3","dir_obj",TRUE,0.033,0.035,"v3_do_that",0.1769,0.6,0.3,0.0318,0.9171
+"verb3","dir_obj",FALSE,0.0793,0.082,"v3_do_xthat",0.1769,0.6,0.7,0.0743,0.9402
