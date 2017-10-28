@@ -2,6 +2,27 @@
 
 ##### linxe
 
+- use often for from-scratch model implementations [here](https://github.com/m-clark/Miscellaneous-R-Code)
+
+- http://automl.github.io/auto-sklearn/stable/
+
+- https://github.com/google/CausalImpact/blob/master/R/impact_misc.R
+
+- https://github.com/google/datastudio
+
+- https://github.com/google/eng-edu
+
+- https://github.com/google/codeworld
+
+- https://github.com/astefanutti/decktape
+
+- http://nbviewer.jupyter.org/github/briandalessandro/DataScienceCourse/blob/master/ipython/python35/Lecture_NumPyBasics_3.ipynb
+
+- nice guide -- ["is a mixed model right for your needs (etc.)"](http://ase.tufts.edu/gsc/gradresources/guidetomixedmodelsinr/mixed%20model%20guide.html)
+
+- setup for [haskell stack](https://docs.haskellstack.org/en/stable/README/)
+
+- nice [paper + repo](https://github.com/dsscollection/basketball) player movement w sportvu 
 
 - [trading/finance tute](https://www.datacamp.com/community/tutorials/finance-python-trading) w python
 

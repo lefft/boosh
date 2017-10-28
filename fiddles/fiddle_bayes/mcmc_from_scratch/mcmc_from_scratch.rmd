@@ -1,0 +1,197 @@
+---
+title: "Metropolis-Hastings MCMC Parameter Estimation"
+subtitle: "from-scratch implementation for OLS regression parameters"
+author: "timothy leffel"
+date: "10/28/2017"
+output: html_document
+---
+
+This is a demo of the Metropolis-Hastings Markov-Chain Monte Carlo (MH-MCMC) algorithm, coded up with just base R functions (except the plotting stuff). Here it is used to estimate the slope and intercept parameters of a simulated dataset, as one would usually do with an OLS linear regression model. Inline comments explain what is happening at the most crucial steps. Most of the action is in the file [`mh-mcmc_from_scratch_functions.r`](http://lefft.xyz/stuff/posts/mcmc_from_scratch/mh-mcmc_from_scratch_functions.r), but the main function `mh_mcmc()` is reproduced below for reference. Download the `.r` source for [this example](http://lefft.xyz/stuff/posts/mcmc_from_scratch/mh-mcmc_from_scratch.r) and the [associated functions](http://lefft.xyz/stuff/posts/mcmc_from_scratch/mh-mcmc_from_scratch_functions.r) to play around with the code and try different combos of parameter values! 
+
+> NOTE: the implementation here is based on the design from [this very nice post](https://theoreticalecology.wordpress.com/2010/09/17/metropolis-hastings-mcmc-in-r/). For some nice discussion of how the algorithm works, see that post and the ones it links to. The most important differences here are that (i) here we focus on just the slope and intercept parameters, the two that people are most likely to be interested in understanding in practical data analysis scenarios; and (ii) all the functions here are fully encapsulated and don't make use of global variables (i.e. they are fully portable). This means that it should be quite straightforward to extend the strategy to more complex sets of parameters. That said, you are probably better off using Stan or another modern framework for Bayesian inference -- this is mostly just meant for conceptual/educational purposes! 
+
+
+### Load dependencies, etc. 
+
+```{r }
+lefftpack::lazy_setup() # devtools::install_github("lefft/lefftpack")
+# or just attach these packages: 
+# library("dplyr"); library("magrittr"); library("reshape2") library("ggplot2");
+```
+
+### Simulate some fake data from pre-determined parameters 
+
+```{r}
+# functions in this file implement the algorithm for unknown `m` and `b`. 
+# some have parameters that can be tinkered with for illustrative purposes. 
+# try playing around with the priors in particular. 
+source("mh-mcmc_from_scratch_functions.r")
+
+
+# simulated data whose parameters we will recover with MH-MCMC  
+b <- -2 
+m <- 2 
+
+n <- 1000
+mean_noise <- 0
+sd_noise <- 10
+
+xvar <- runif(n, min=-20, max=20)
+yvar <- m * xvar + b + rnorm(n=n, mean=mean_noise, sd=sd_noise)
+
+qplot(xvar, yvar)
+lm(yvar ~ xvar)$coefficients
+
+true_b <- as.numeric(lm(yvar ~ xvar)$coefficients["(Intercept)"])
+true_m <- as.numeric(lm(yvar ~ xvar)$coefficients["xvar"])
+
+
+```
+
+
+
+### Execute the algorithm to recover intercept and slope parameters 
+
+```{r out.width="100%"}
+# `n_iters`-many runs, with start vals of b=m=0 and .25 burn-in rate 
+start <- c(0, 0)
+n_iters <- 2500
+burnin_rate <- .25
+
+# execute the algorithm 
+markov_chain <- mh_mcmc(xvar, yvar, start, n_iters, burnin_rate)
+
+# the ranges of values tried for each parameter are: 
+range(markov_chain[, 1])
+range(markov_chain[, 2])
+
+# note that all params are accepted or rejected in one shot 
+apply(markov_chain, MARGIN=2, function(col) length(unique(col)))
+
+
+sim_info <- paste0(
+  "\nMCMC info: 2.5k iterations; .25 burn-in rate; start values b=0, m=0\n",
+  "data info: 1k points sampled from f(x) = 2x -2 + N(0, 10), ",
+  "for x ~ Unif(-20, 20)"
+)
+# visualize the posteriors and random walk progression for each param 
+plot_mcmc(chain=markov_chain, true_b=true_b, true_m=true_m, sim_info=sim_info)
+
+
+
+
+
+```
+
+
+<hr><br><br>
+
+
+### Appendix: main function implementing MH-MCMC 
+
+This and other functions it depends on are defined in [`mh-mcmc_from_scratch_functions.r`](http://lefft.xyz/stuff/posts/mcmc_from_scratch/mh-mcmc_from_scratch_functions.r)
+
+
+```{r eval=FALSE}
+# not evaluated -- 
+
+# implements the metropolis-hastings MCMC algorithm. 
+# semi-intelligently tries different values iteratively to estimate parameters 
+mh_mcmc <- function(xvar, yvar, start, n_iters, burnin_rate=NULL){
+  
+  # initialize the chain 
+  chain <- matrix(rep(NA, (n_iters+1)*2), ncol=2)
+  chain[1, ] <- start
+  
+  # for each iteration: 
+  for (x in 1:n_iters){
+    
+    # guess some values for `m` and `b` 
+    proposal <- generate_new_values(b_est=chain[x,1], m_est=chain[x,2])
+    
+    # unnormalized probabilities of new and most recent values 
+    proposal_prob <- posterior(b_est=proposal[1], m_est=proposal[2], xvar, yvar)
+    current_prob <- posterior(b_est=chain[x,1], m_est=chain[x,2], xvar, yvar)
+    
+    # 'prob' that new vals are more likely than current chain vals 
+    # (NOTE: NOT A TRUE PROBABILITY -- CAN BE ABOVE 1 BUT USUALLY DOESNT MATTER)
+    prob <- exp(proposal_prob - current_prob)
+    
+    # get a random probability 
+    random_prob <- runif(1, min=0, max=1)
+    
+    # if prob for new value is better than random prob, accept proposal 
+    if (random_prob < prob){
+      chain[x+1, ] <- proposal
+    } else {
+      # otherwise retain most recent value 
+      chain[x+1, ] <- chain[x, ]
+    }
+  }
+  
+  colnames(chain) <- c("theta_b", "theta_m")
+  
+  # throw out the first `burnin_rate` iterations before return 
+  if (!is.null(burnin_rate)){
+    return(chain[(floor(burnin_rate*nrow(chain))+1) : nrow(chain), ])
+  } else {
+    return(chain)  
+  }
+}
+
+
+```
+
+
+
+
+<style>
+
+<!-- /* use this to get font import code: http://fonts.googleapis.com/css?family=FONT+NAME*/ -->
+<!-- /* use **latin**, not latin-extended */ -->
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'), url(https://fonts.gstatic.com/s/sourcesanspro/v11/ODelI1aHBYDBqgeIAH2zlJbPFduIYtoLzwST68uhz_Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+
+@font-face {
+  font-family: 'Roboto Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto Mono'), local('RobotoMono-Regular'), url(https://fonts.gstatic.com/s/robotomono/v5/hMqPNLsu_dywMa4C_DEpY4gp9Q8gbYrhqGlRav_IXfk.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+body {
+  padding: 10px;
+  font-size: 12pt;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+h4 {
+  margin-top: 32px;
+  font-weight: bold;
+}
+
+blockquote {
+  font-size: 12pt;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+code {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+}
+
+pre {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+}
+
+</style>
+
+

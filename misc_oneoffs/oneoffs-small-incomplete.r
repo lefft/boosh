@@ -1,4 +1,91 @@
 
+
+
+###############################################################################
+###############################################################################
+# fiddling w lil snippets from ihaka + gentleman 1996 paper introducing R
+# [orig example way smaller -- this one is fun but a mess!]
+###############################################################################
+###############################################################################
+
+# waow this is basically just a class in oo paradigm! :o
+act <- function(init, intrate=.1){
+  year <- 0
+  intrate <- intrate
+  balance <- init
+  b <- function(){message("balance = ", balance, ", year = ", 
+                          year, ", ir = ", intrate)}
+  list(
+    # msg first when returning a val (ow dont matter)
+    balance = function(){ b();      balance                           }, 
+    update_intrate = function(fac){ intrate <<- intrate * fac;   b()  },
+    intrate = function(){ b();      intrate                           },
+    depo = function(amt){           balance <<- balance + amt;   b()  },
+    wd = function(amt){             balance <<- balance - amt;   b()  }, 
+    elapse_year = function(){ balance <<- balance + (intrate * balance); 
+    year    <<- year+1;          b()  }, 
+    summ = function(){              message("account summary: "); b()}
+  )
+}
+
+my <- act(init=100)
+my$balance()
+my$intrate()
+my$update_intrate(2)
+my$intrate()
+my$summ()
+
+my$balance()
+my$wd(20)
+my$summ()
+my$depo(10)
+my$depo(10)
+
+my$elapse_year()
+my$summ()
+my$elapse_year()
+my$summ()
+my$elapse_year()
+
+
+
+sim_acct <- function(start, yrz, intrate, intrate_bump){
+  
+  my_acct <- act(init=start, intrate=intrate)
+  balz <- rep(NA, times=yrz+1)
+  balz[1] <- my_acct$balance()
+  
+  for (x in 2:(yrz+1)){
+    # for each year, update the interest and add to balz
+    my_acct$elapse_year()
+    balz[x] <- my_acct$balance()
+    # interesting to see wha happen when u add a bit of interest each year
+    my_acct$update_intrate(fac=intrate_bump)
+  }
+  print(plot(x=1:(yrz+1), y=balz))
+  return(my_acct)
+}
+boosh <- sim_acct(start=100, yrz=100, intrate=.1, intrate_bump=1)
+
+
+
+# experiment around w arg evaluation and environments
+#   - also play arounde w whether z/y exist prior to func def'n and func call
+silly <- function(x,y){
+  if (y<10) print(paste0("x = ", x)) else print(paste0("y = ", y))
+  # else print(paste0("z = ", z))
+}
+silly(1,9); silly(1,19)
+silly(1,z <- 9); paste0("z = ", z)
+silly(1,z <- 19); paste0("z = ", z)
+silly(1,199)
+silly(y=1); silly(y=199)
+silly(1,9); silly(z <- 1, 9); z
+silly(1,9); silly(z <- 1,19); z
+
+
+
+
 ###############################################################################
 ###############################################################################
 ### `sim-population` -- sim a mini world w interesting properties -------------
