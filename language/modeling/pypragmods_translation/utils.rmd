@@ -1,0 +1,76 @@
+---
+output: html_document
+---
+
+
+```{r}
+normalize <- function(vec){
+  return(vec/sum(vec, na.rm=TRUE))
+}
+
+rownorm <- function(mat){
+  return(t(apply(mat, MARGIN=1, normalize)))
+}
+
+colnorm <- function(mat){
+  return(apply(mat, MARGIN=2, normalize))
+}
+
+safelog <- function(vals){
+  return(log(vals))
+}
+
+powerset <- function(x, minsize=1, maxsize=NULL){
+  if (is.null(maxsize)){
+    maxsize <- length(x)
+  }
+  res <- vector(mode="list", length=maxsize+1)
+  res[[1]] <- numeric(0)
+  for (size in minsize:maxsize){
+    res[[size+1]] <- combn(x, size, simplify=FALSE)
+  }
+  return(res)
+}
+
+mse <- function(x, y, root=FALSE){
+  mse <- mean((x-y)^2)
+  if (root) return(sqrt(mse)) else return(root)
+}
+
+
+```
+
+
+```{python eval=FALSE}
+import numpy as np
+from itertools import combinations
+
+
+def rownorm(mat):
+    """Row normalization of a matrix"""
+    return np.divide(mat.T, np.sum(mat, axis=1)).T
+    
+def colnorm(mat):
+    """Column normalization of a matrix"""    
+    return np.divide(mat, np.sum(mat, axis=0))
+
+def safelog(vals):
+    with np.errstate(divide='ignore'):
+        return np.log(vals)
+
+def powerset(x, minsize=0, maxsize=None):
+    result = []
+    if maxsize == None: maxsize = len(x)
+    for i in range(minsize, maxsize+1):
+        for val in combinations(x, i):
+            result.append(list(val))
+    return result
+
+def mse(x, y):
+    """Mean squared error"""
+    #err = np.sqrt(np.sum((x-y)**2)/len(x))
+    err = np.mean((x-y)**2)
+    return err
+
+```
+

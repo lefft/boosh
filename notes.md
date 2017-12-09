@@ -2,6 +2,10 @@
 
 ##### linxe
 
+http://pyro.ai/
+http://docs.pymc.io/notebooks/getting_started.html#A-Motivating-Example:-Linear-Regression
+http://andrewgelman.com/2017/05/31/compare-stan-pymc3-edward-hello-world/
+
 - use often for from-scratch model implementations [here](https://github.com/m-clark/Miscellaneous-R-Code)
 
 - http://automl.github.io/auto-sklearn/stable/

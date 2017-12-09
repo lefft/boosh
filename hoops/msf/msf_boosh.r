@@ -1,9 +1,15 @@
 # load dependencies
-library("dplyr");   library("magrittr"); library("reshape2")
-library("ggplot2"); library("ggthemes"); library("jsonlite")
+lefftpack::lazy_setup(); library("ggthemes"); library("jsonlite")
+
+
+# https://api.mysportsfeeds.com/v1.1/pull/nba/{season-name}/game_boxscore.{format}?gameid={game-identifier}
+
 
 # load functions + api credentials
-source("functions.r")
+source("msf_functions.r")
+
+
+
 
 # generate url for play-by-play api call from season and game string
 url <- make_msf_pbp_url(cred, "2017-playoff", "20170612-CLE-GSW")

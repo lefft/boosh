@@ -23,14 +23,16 @@ read_gamelog <- function(file){
   if (year=="2016"){
     out <- read.csv(file, stringsAsFactors=FALSE, header=FALSE, skip=1)
     out[[1]] <- NULL
-    names(out) <- gsub(",", "", unlist(strsplit(readLines(file, n=1), "#")))[3:74]
+    names(out) <- gsub(",", "", 
+                       unlist(strsplit(readLines(file, n=1), "#")))[3:74]
     out <- out[, c(idcols, statcols)]
     # return(out)
   }
   if (year=="2017"){
     out <- read.csv(file, stringsAsFactors=FALSE, header=FALSE, skip=1)
     out[[1]] <- NULL
-    names(out) <- gsub(",", "", unlist(strsplit(readLines(file, n=1), "#")))[3:93]
+    names(out) <- gsub(",", "", 
+                       unlist(strsplit(readLines(file, n=1), "#")))[3:93]
     out <- out[, c(idcols, statcols)]
     # return(out)
   }

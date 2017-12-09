@@ -1,5 +1,5 @@
 lefftpack::lazy_setup()
-d <- read.csv("hiccup_data.csv", header=FALSE, col.names=c("n","ms")) 
+d <- read.csv("hiccup_data.csv", col.names=c("n","ms")) 
 
 head(d)
 
