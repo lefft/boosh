@@ -57,35 +57,29 @@ dat %>% filter(season=="2018") %>%
     triple_doubles = sum(doubles > 2)
   ) %>% arrange(desc(double_doubles))
 
-
+### WRITE THIS EACH TIME YOU UPDATE DB, THEN CAN QUICKLY LOAD BELOW 
 write.csv(dat, "quickdat.csv", row.names=FALSE)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+### READ IN THE PLAYER LEVEL DATA WE JUST SAVED 
 dat <- read.csv("quickdat.csv", stringsAsFactors=FALSE)
 
+### FACTCHECK -- LEBRON 3PT 41.7%, BEST OF CAREER 
+dat %>% 
+  # filter(player=="LeBron James") %>% 
+  group_by(player, season) %>% summarize(
+    games = sum(MPn > 0, na.rm=TRUE), 
+    threes = sum(threeP, na.rm=TRUE), 
+    threeA = sum(threePA, na.rm=TRUE), 
+    three_pct = round((threes / threeA) * 100, 2)
+  ) %>% 
+  filter(threes > 100) %>% 
+  filter(games >  50) %>% 
+  arrange(desc(threes))
+
+
+### FACTCHECK -- LEADERS IN DOUBLE DOUBLES 
 dat %>% 
   rowwise() %>% 
   mutate(doubles = sum(PTS > 9, TRB > 9, AST > 9, BLK > 9, na.rm=TRUE)) %>% 

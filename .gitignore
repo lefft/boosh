@@ -8,4 +8,7 @@ junk_links_etc.md
 junk_links_etc.html
 fiddle_py/dl_examples
 _ignore
-
+hoops/api_build/data
+hoops/api_build/data/*.csv
+hoops/throne/data/*.csv
+hoops/throne/data/*.zip
