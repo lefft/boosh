@@ -21,12 +21,8 @@ language/nlp/sentiment/umass_sent_corpus
 language/nlp/tweeter/clutter
 language/nlp/tweeter/out
 language/nlp/tweeter/out-olf
-language/nlp/unaman_googmem/docint_plots
-language/nlp/unaman_googmem/intersect_plots
-language/nlp/unaman_googmem/out
-language/nlp/unaman_googmem/PosTagR.pdf
 language/nlp/word_vectors/data
-**/ignore/
+**/ignore
 fiddles/fiddle_bayes/misc_etc
 fiddles/fiddle_coq
 **/.html
