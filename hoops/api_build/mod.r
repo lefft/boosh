@@ -45,9 +45,14 @@ dat %>% group_by(player) %>% summarize(
 ) %>% 
   mutate_if(is.numeric, round, digits=1) %>% 
   filter(total_mp > 500) %>% 
-  arrange(desc(fpg)) -> meanze
-  # arrange(desc(ppg)) -> meanze
+  # arrange(desc(fpg)) -> meanze
+  arrange(desc(ppg)) -> meanze
 meanze 
+
+
+
+
+
 
 
 c("games","mean_pm","mpg","ppg","rpg","apg","spg","bgp","topg","pfpg","ftpg",

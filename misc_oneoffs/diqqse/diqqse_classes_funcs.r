@@ -24,7 +24,7 @@ GUY <- R6Class(
     # relevant attributes for model params 
     front_to_back = NULL,
     middle_to_side = NULL,
-    base_to_butt = NULL,
+    base_to_btt = NULL,
     max_peen_angle = NULL,
     theta_rotation = NULL,
     theta_angle = NULL,
@@ -34,7 +34,7 @@ GUY <- R6Class(
       self$position_index <- index
       self$front_to_back <- f2b
       self$middle_to_side <- m2s
-      self$base_to_butt <- b2b
+      self$base_to_btt <- b2b
       self$max_peen_angle <- mpa
       self$theta_rotation <- th_r
       self$theta_angle <- th_a
@@ -44,7 +44,7 @@ GUY <- R6Class(
         "name: ", self$name, "   position: ", self$position_index, "\n", 
         "  >> front to back: ",  self$front_to_back,  "\n", 
         "  >> middle to side: ", self$middle_to_side,  "\n", 
-        "  >> base to butt: ",   self$base_to_butt,  "\n", 
+        "  >> base to btt: ",   self$base_to_btt,  "\n", 
         "  >> max peen angle: ", self$max_peen_angle,  "\n", 
         "  >> theta rotation: ", self$theta_rotation, "\n", 
         "  >> theta angle: ",    self$theta_angle, "\n"
@@ -55,7 +55,7 @@ GUY <- R6Class(
 
 
 BF_CIRCLE <- R6Class(
-  "butt_circle", 
+  "btt_circle", 
   public = list(
     # global attributes 
     circle_radius = NULL,

@@ -1,3 +1,6 @@
+
+
+
 ### PART 1 ## ~~ ## ~~ ## ~~ ## ~~ ## ~~ ## ~~ ## ~~ ## ~~ ## ~~ ## ~~ ## ~~ 
 import os
 from sklearn.feature_extraction.text import CountVectorizer
@@ -11,14 +14,15 @@ test = 'testData.tsv'
 data_loc = 'data'
 bow_out = 'bow_out.csv'
 
-# read in test and train data 
+# read in test and train data (can use , nrows=75, , nrows=25)
 train = pd.read_csv(
   os.path.join(data_loc, train), header=0, delimiter="\t", quoting=3)
 
 test = pd.read_csv(
   os.path.join(data_loc, test), header=0, delimiter="\t", quoting=3)
 
-print('first review:', train["review"][0])
+print('first review:\n  >> {}...[TRUNCATED]'.format(train["review"][0][0:200]))
+print('second review:\n  >> {}...[TRUNCATED]'.format(train["review"][1][0:200]))
 # nltk.download()  # Download text data sets, including stop words
 
 
@@ -30,9 +34,10 @@ clean_train_reviews = []
 # Loop over each review; create an index i that goes from 0 to the length
 # of the movie review list
 # "Cleaning and parsing the training set movie reviews...\n"
-for i in range( 0, len(train["review"])): # <-- was `xrange()`
+for i in range(0, len(train["review"])): # <-- was `xrange()`
   clean_train_reviews.append(
     " ".join(KagW2V.review_to_wordlist(train["review"][i], True)))
+
 # NOTE: WARNING ABOUT HTML PARSING (ine 3 of the file <stdin>)
 # he code that caused this warning is on line 3 of the file <stdin>. 
 # To get rid of this warning, change code that looks like this: 
@@ -57,9 +62,10 @@ vectorizer = CountVectorizer(analyzer = "word",
 # The input to fit_transform should be a list of strings.
 train_data_features = vectorizer.fit_transform(clean_train_reviews)
 
+
+
 # Numpy arrays are easy to work with, so convert the result to an array
 np.asarray(train_data_features)
-
 
 
 
@@ -75,10 +81,11 @@ forest = RandomForestClassifier(n_estimators = 100)
 # This may take a few minutes to run
 forest = forest.fit(train_data_features, train["sentiment"])
 
-# Create an empty list and append the clean reviews one by one
-clean_test_reviews = []
 
+
+# ****** NOW APPLY TO TEST SET ******* 
 # "Cleaning and parsing the test set movie reviews...\n"
+clean_test_reviews = []
 for i in range(0,len(test["review"])):
   clean_test_reviews.append(
     " ".join(KagW2V.review_to_wordlist(test["review"][i], True)))
@@ -89,8 +96,6 @@ test_data_features = vectorizer.transform(clean_test_reviews)
 np.asarray(test_data_features)
 
 
-
-
 # Use the random forest to make sentiment label predictions
 # "Predicting test labels...\n"
 result = forest.predict(test_data_features)
@@ -99,6 +104,7 @@ result = forest.predict(test_data_features)
 output = pd.DataFrame( data={"id":test["id"], "sentiment":result} )
 
 
+output.head(10)
 test['review'][0]
 type(test)
 test.head(5)

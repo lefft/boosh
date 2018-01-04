@@ -5,7 +5,7 @@ source("diqqse_classes_funcs.r")
 # lower bound is: 7 assuming 10in `middle_to_side`
 front_to_back <- 10 
 middle_to_side <- 10 
-base_to_butt <- 2 
+base_to_btt <- 2 
 
 max_peen_angle <- 45 
 theta_angle <- 25
@@ -19,7 +19,7 @@ angle_interior <- 150
 
 
 bruh <- GUY$new(name="tim", index=1, 
-                f2b=front_to_back, m2s=middle_to_side, b2b=base_to_butt, 
+                f2b=front_to_back, m2s=middle_to_side, b2b=base_to_btt, 
                 mpa=max_peen_angle, th_r=theta_rotation, th_a=theta_angle)
 
 bruh$show()
@@ -86,15 +86,3 @@ ggplot(g) + them +
   coord_polar(theta="x") + 
   labs(x="x = angle", y="y = distance from center")
 g
-# 
-# carlos has 96 granola bars and 64 popcorn balls 
-# 
-# carlos is making snack bags 
-# 
-# and he's putting the same set of treats in each bag 
-# 
-# what is the maximum number of treat bags that carlos can make??
-# 
-# (96+64)/5
-# 
-

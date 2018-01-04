@@ -1,4 +1,7 @@
+
+
 ### tim notes to self
+
 
 - [source](https://github.com/wendykan/DeepLearningMovies/blob/master/BagOfWords.py)
 - [blog post(s)](https://www.kaggle.com/c/word2vec-nlp-tutorial#part-1-for-beginners-bag-of-words)

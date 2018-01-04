@@ -42,7 +42,8 @@ class KagW2V(object):
         # list of sentences, where each sentence is a list of words
         #
         # 1. Use the NLTK tokenizer to split the paragraph into sentences
-        raw_sentences = tokenizer.tokenize(review.decode('utf8').strip())
+        # WAS raw_sentences = tokenizer.tokenize(review.decode('utf8').strip())
+        raw_sentences = tokenizer.tokenize(review.strip())
         #
         # 2. Loop over each sentence
         sentences = []

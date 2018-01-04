@@ -58,7 +58,8 @@ dat %>% filter(season=="2018") %>%
   ) %>% arrange(desc(double_doubles))
 
 ### WRITE THIS EACH TIME YOU UPDATE DB, THEN CAN QUICKLY LOAD BELOW 
-write.csv(dat, "quickdat.csv", row.names=FALSE)
+dat <- dat %>% filter(season=="2018")
+write.csv(dat, "quickdat2018.csv", row.names=FALSE)
 
 
 
@@ -150,7 +151,16 @@ plotly::ggplotly(pp)
 
 
 
-# 
+##### MESSING W BRONBRON DAYTA <333 
+lbj <- dat %>% filter(player=="LeBron James")
+
+
+
+
+
+
+
+
 
 
 # There are three variants.
@@ -170,4 +180,5 @@ starwars %>% summarise_if(is.numeric, mean, na.rm = TRUE)
 #   lapply(function(file){
 #     read.csv(file, stringsAsFactors=FALSE) %>% mutate(dataset = file)
 #   }) %>% (function(dfs) do.call("rbind", dfs)) 
+
 
